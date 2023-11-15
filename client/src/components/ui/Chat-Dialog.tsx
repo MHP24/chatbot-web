@@ -1,5 +1,5 @@
 export const ChatDialog = () => {
   return (
-    <main>Chat-Dialog</main>
+    <main className="h-full bg-c2">Chat-Dialog</main>
   )
 }
