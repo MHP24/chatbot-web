@@ -1,6 +1,6 @@
 export const ChatInput = () => {
   return (
-    <form className="h-[17%] bg-c2 rounded-br-lg rounded-bl-lg">
+    <form className="h-[17%] bg-c2 rounded-br-xl rounded-bl-xl">
       <div className=''>
         <input
           type="text"
