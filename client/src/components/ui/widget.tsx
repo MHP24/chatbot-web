@@ -1,9 +1,9 @@
-import { Window, WidgetButton } from '.'
+import { WidgetWindow, WidgetButton } from '.'
 
 export const Widget = () => {
   return (
     <>
-      <Window/>
+      <WidgetWindow/>
       <WidgetButton/>
     </>
   )

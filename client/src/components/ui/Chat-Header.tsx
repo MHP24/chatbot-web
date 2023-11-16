@@ -6,10 +6,10 @@ export const ChatHeader = () => {
   const { handleWidget } = useWidgetContext()
 
   return (
-    <header className="flex h-[20%] w-full px-6 py-3 pr-3 bg-c1 rounded-tr-lg rounded-tl-lg">
+    <header className="flex h-[20%] w-full px-6 py-3 pr-3 bg-c1 rounded-tr-lg rounded-tl-lg shadow-2xl">
 
       <div className="flex items-center h-full w-full gap-5">
-        <div className="flex relative bg-c4 w-16 rounded-full aspect-square p-3">
+        <div className="flex relative bg-c4 w-16 rounded-full aspect-square p-3 shadow-xl">
           <img src={botIllustration} className="m-auto w-full h-full"/>
 
           {/* Status indicator */}
@@ -24,7 +24,7 @@ export const ChatHeader = () => {
           <h1 className="text-2xl font-semibold">ChatBot</h1>
 
           {/* Status label */}
-          <p className="text-md">En linea</p>
+          <p className="text-md opacity-50">En linea</p>
         </div>
       </div>
 
