@@ -7,7 +7,7 @@ const INITIAL_STATE: WidgetT = {
   timesOpened: 0
 }
 
-export const WidgetContextProvider: FC<PropsWithChildren> = ({ children }) => {
+export const WidgetProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(widgetReducer, INITIAL_STATE)
 
   const handleWidget = (arg: boolean) => {

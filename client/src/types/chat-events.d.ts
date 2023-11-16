@@ -1,5 +1,5 @@
 import { type Message } from '.'
-import { type CurrentFlow } from './chat'
+import { type Flow } from './chat'
 
 /* Listeners */
 export type OnSession = {
@@ -15,12 +15,14 @@ export type OnMessage = {
 }
 
 export type OnTransfer = {
-  flow: CurrentFlow
+  flow: Flow
   name?: string
 }
 
 export type OnClose = {
   reason: string
+  title: string
+  detail: string
 }
 
 /* Emitters */

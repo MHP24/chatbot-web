@@ -1,3 +1,17 @@
-export type CurrentFlow = 'bot' | 'agent' | 'survey'
+import { type Message } from '.'
 
-// TODO: Create chat state and detail
+export type Flow = 'bot' | 'agent' | 'survey'
+
+export type Chat = {
+  isOnline: boolean
+  sessionId?: string
+  flow?: Flow
+  messages: Message[]
+}
+
+export type ChatState = & Chat
+
+// TODO: add fns
+export type ChatContextT = {
+  establishConnection: () => void
+} & Chat
