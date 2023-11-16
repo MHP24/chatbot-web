@@ -1,8 +1,10 @@
 import botIllustration from '../../assets/svgs/bot.svg'
 import closeOption from '../../assets/svgs/close.svg'
-// import agentIllustration from "../../assets/svgs/agent.svg"
+import { useWidgetContext } from '../../hooks'
 
 export const ChatHeader = () => {
+  const { handleWidget } = useWidgetContext()
+
   return (
     <header className="flex h-[20%] w-full px-6 py-3 pr-3 bg-c1 rounded-tr-lg rounded-tl-lg">
 
@@ -11,7 +13,7 @@ export const ChatHeader = () => {
           <img src={botIllustration} className="m-auto w-full h-full"/>
 
           {/* Status indicator */}
-          <div className=' absolute w-3 h-3 bottom-0 mx-auto
+          <div className='absolute w-3 h-3 bottom-0 mx-auto
             rounded-full  bg-online border-2 border-c1'
           >
           </div>
@@ -28,7 +30,7 @@ export const ChatHeader = () => {
 
       {/* Actions (Close, reload) */}
       <div className='flex items-start gap-4'>
-        <button className='h-25 w-25'>
+        <button className='h-25 w-25' onClick={() => { handleWidget(false) }}>
           <img src={closeOption} className='h-full w-full'/>
         </button>
       </div>
