@@ -19,8 +19,6 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
       type: '[Session] - Set online status',
       payload: session.isOnline
     })
-
-    // TODO: if online init Listeners
   }, [session])
 
   const establishConnection = () => {

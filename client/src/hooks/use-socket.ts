@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
 type Session = {
@@ -6,27 +6,30 @@ type Session = {
   isOnline: boolean
 }
 
-export const useSocket = (sessionId: string | null = null) => {
+export const useSocket = (authentication: string | null = null) => {
   const [session, setSession] = useState<Session>({
     socket: undefined,
     isOnline: false
   })
-
   const { socket } = session
+
+  useEffect(() => {
+    return () => {
+      session.socket?.disconnect()
+    }
+  }, [session])
 
   const connect = () => {
     const ioSession = io('http://127.0.0.1:3001', {
       extraHeaders: {
-        sessionId: sessionId ?? ''
+        authentication: authentication ?? ''
       }
-    })
+    }).connect()
 
-    ioSession.on('connect', () => {
-      setSession({ ...session, socket: ioSession, isOnline: true })
-    })
-
-    ioSession.on('connect_error', (error) => {
-      console.error('Connection error:', error)
+    setSession({
+      ...session,
+      socket: ioSession,
+      isOnline: true
     })
   }
 
