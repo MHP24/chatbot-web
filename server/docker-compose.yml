@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  redis_db:
+    image: redis/redis-stack-server
+    container_name: ${REDIS_HOST}
+    restart: always
+    ports:
+      - ${REDIS_PORT}:6379

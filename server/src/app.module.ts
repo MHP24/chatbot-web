@@ -3,6 +3,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JoiValidationSchema, appConfig } from './common/config';
 
+// Cache setup
+import { RedisModule } from './providers/cache/redis.module';
+
 // Gateway (WebSocket)
 import { ChatModule } from './chat/chat.module';
 
@@ -17,6 +20,7 @@ import { SurveyModule } from './flows/survey/survey.module';
       load: [appConfig],
       validationSchema: JoiValidationSchema,
     }),
+    RedisModule,
     ChatModule,
     BotModule,
     AgentModule,
