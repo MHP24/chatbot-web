@@ -6,17 +6,18 @@ import {
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
 
 // ! http://127.0.0.1:3001/socket.io/socket.io.js
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  logger = new Logger('ChatGateway');
+
   constructor(private readonly chatService: ChatService) {}
 
   handleConnection(client: Socket) {
-    console.log(client.handshake.headers);
-
-    // const handshake = this.chatService.onConnect(client, client.handshake.headers)
-    console.log(`Connected ${client.id}`);
+    this.logger.log(`${client.id} connected`);
+    this.chatService.onConnect(client.handshake.headers.sessionId as string);
   }
 
   handleDisconnect(client: Socket) {
