@@ -1,30 +1,34 @@
-export const home = {
+import { BotMessage } from '../../../flows/types';
+
+export const home: Record<string, BotMessage> = {
   start: {
     type: 'options',
     header: '¡Hola! Soy el asistente virtual de Miguel',
     body: [{ type: 'text', text: '¿En qué puedo ayudarte hoy?' }],
-    options: [
-      {
-        label: 'Automatiza tu negocio',
-        redirect: 'business:portfolio',
-      },
-      {
-        label: 'Servicios',
-        redirect: 'business:services',
-      },
-      {
-        label: 'Proyectos',
-        redirect: 'home:projects',
-      },
-      {
-        label: 'Acerca de',
-        redirect: 'home:about',
-      },
-      {
-        label: 'Contactar con Miguel',
-        redirect: 'contact:start',
-      },
-    ],
+    data: {
+      options: [
+        {
+          label: 'Automatiza tu negocio',
+          redirect: 'business:portfolio',
+        },
+        {
+          label: 'Servicios',
+          redirect: 'business:services',
+        },
+        {
+          label: 'Proyectos',
+          redirect: 'home:projects',
+        },
+        {
+          label: 'Acerca de',
+          redirect: 'home:about',
+        },
+        {
+          label: 'Contactar con Miguel',
+          redirect: 'contact:start',
+        },
+      ],
+    },
   },
 
   projects: {
@@ -51,28 +55,30 @@ export const home = {
         text: 'Para seguir navegando selecciona alguna de las opciones:',
       },
     ],
-    options: [
-      {
-        label: 'Automatiza tu negocio',
-        redirect: 'business:portfolio',
-      },
-      {
-        label: 'Servicios',
-        redirect: 'business:services',
-      },
-      {
-        label: 'Acerca de',
-        redirect: 'home:about',
-      },
-      {
-        label: 'Contactar con Miguel',
-        redirect: 'contact:start',
-      },
-      {
-        label: 'Salir',
-        redirect: 'home:exit',
-      },
-    ],
+    data: {
+      options: [
+        {
+          label: 'Automatiza tu negocio',
+          redirect: 'business:portfolio',
+        },
+        {
+          label: 'Servicios',
+          redirect: 'business:services',
+        },
+        {
+          label: 'Acerca de',
+          redirect: 'home:about',
+        },
+        {
+          label: 'Contactar con Miguel',
+          redirect: 'contact:start',
+        },
+        {
+          label: 'Salir',
+          redirect: 'home:exit',
+        },
+      ],
+    },
   },
 
   about: {
@@ -88,24 +94,26 @@ export const home = {
         text: 'Para seguir navegando selecciona alguna de las opciones:',
       },
     ],
-    options: [
-      {
-        label: 'Automatiza tu negocio',
-        redirect: 'business:portfolio',
-      },
-      {
-        label: 'Servicios',
-        redirect: 'business:services',
-      },
-      {
-        label: 'Contactar con Miguel',
-        redirect: 'contact:start',
-      },
-      {
-        label: 'Salir',
-        redirect: 'home:exit',
-      },
-    ],
+    data: {
+      options: [
+        {
+          label: 'Automatiza tu negocio',
+          redirect: 'business:portfolio',
+        },
+        {
+          label: 'Servicios',
+          redirect: 'business:services',
+        },
+        {
+          label: 'Contactar con Miguel',
+          redirect: 'contact:start',
+        },
+        {
+          label: 'Salir',
+          redirect: 'home:exit',
+        },
+      ],
+    },
   },
 
   exit: {

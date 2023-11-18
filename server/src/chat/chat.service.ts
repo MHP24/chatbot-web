@@ -5,13 +5,14 @@ import { GenerateIdAdapter } from '../common/adapters';
 import { Chat, Flow, Message } from '../common/types';
 import { RedisService } from '../providers/cache/redis.service';
 import { FlowService } from 'src/flows/flow.service';
+import { BotMessage } from 'src/flows/types';
 
 @Injectable()
 export class ChatService {
   logger = new Logger('ChatService');
 
   constructor(
-    // TODO: add session and flow service
+    // TODO: add session service
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly generateId: GenerateIdAdapter,
@@ -32,7 +33,7 @@ export class ChatService {
       return;
     }
 
-    await this.initializeChat(room);
+    await this.initializeChat(server, room);
 
     this.logger.log(`Session ${room} created`);
     return this.emitSession(server, {
@@ -45,7 +46,7 @@ export class ChatService {
   onMessage() {}
   onSurvey() {}
 
-  async initializeChat(id: string) {
+  async initializeChat(server: Server, id: string) {
     const timestamp = Number(new Date());
     const defaultFlow = this.configService.get('DEFAULT_FLOW');
 
@@ -60,12 +61,9 @@ export class ChatService {
       log: [],
     });
 
-    // ! When it's a new user is required a message
-    // ! to start the flow..
     const defaultMessage: Message = {
       sessionId: id,
       message: {
-        // ! Add default key and type for flow start (required)
         type: this.configService.get('DEFAULT_FLOW_KEY_TYPE'),
         data: this.configService.get('DEFAULT_FLOW_KEY'),
       },
@@ -74,8 +72,11 @@ export class ChatService {
         currentFlow: defaultFlow,
       },
     };
-    this.flowService.handleFlow(defaultMessage);
+
+    const flowResponse = this.flowService.handleFlow(defaultMessage);
+    flowResponse && this.emitMessage(server, id, flowResponse);
   }
+
   /* Event emitters */
   emitSession(server: Server, context: { sessionId: string; flow: Flow }) {
     return server.to(context.sessionId).emit('session', context);
@@ -84,7 +85,9 @@ export class ChatService {
   emitLoad() {}
 
   /* Chat interactions */
-  emitMessage() {}
+  emitMessage(server: Server, sessionId: string, message: BotMessage) {
+    return server.to(sessionId).emit('message', message);
+  }
   emitTransfer() {}
   emitClose() {}
   emitChatLoad() {} // TODO: =>  last

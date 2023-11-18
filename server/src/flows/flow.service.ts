@@ -6,7 +6,7 @@ import { Message } from '../common/types';
 export class FlowService {
   // TODO: 3 flows..
   // ! Flow declaration and support
-  flows: Record<string, (message: Message) => void> = {
+  flows: Record<string, (message: Message) => any> = {
     bot: this.botService.handleFlow,
   };
 
@@ -23,9 +23,6 @@ export class FlowService {
     const flowExecution = this.flows[currentFlow];
     if (!flowExecution) throw new Error(`Flow unsupported: ${currentFlow}`);
 
-    const data = flowExecution(message);
-    // !Message from bot in case or transfer if it's required
-    // !send confirmation of sent message
-    console.log({ data });
+    return flowExecution(message);
   }
 }

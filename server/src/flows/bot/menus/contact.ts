@@ -1,23 +1,32 @@
-export const contact = {
+import { BotMessage } from '../../../flows/types';
+export const contact: Record<string, BotMessage> = {
   start: {
     type: 'question',
-    isOptional: false,
-    question: 'Por favor, a continuación ingresa tu email:',
-    regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-    error_message: 'Por favor, ingresa un email válido.',
-    on_input_valid: {
-      redirect: 'contact:subject',
+    data: {
+      question: {
+        isOptional: false,
+        question: 'Por favor, a continuación ingresa tu email:',
+        regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        error_message: 'Por favor, ingresa un email válido.',
+        on_input_valid: {
+          redirect: 'contact:subject',
+        },
+      },
     },
   },
 
   subject: {
     type: 'question',
-    isOptional: false,
-    question: '¿Que información te gustaría recibir?',
-    regex: null,
-    error_message: 'Por favor, ingresa un asunto válido',
-    on_input_valid: {
-      redirect: 'contact:send',
+    data: {
+      question: {
+        isOptional: false,
+        question: '¿Que información te gustaría recibir?',
+        regex: null,
+        error_message: 'Por favor, ingresa un asunto válido',
+        on_input_valid: {
+          redirect: 'contact:send',
+        },
+      },
     },
   },
 

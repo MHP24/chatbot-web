@@ -1,4 +1,4 @@
-export type MessageT = 'option' | 'text';
+export type MessageT = 'option' | 'text' | 'question';
 
 export type Message = {
   sessionId: string;
