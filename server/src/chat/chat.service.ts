@@ -60,13 +60,14 @@ export class ChatService {
       log: [],
     });
 
-    // ! When it's a new user is needed a message
+    // ! When it's a new user is required a message
     // ! to start the flow..
     const defaultMessage: Message = {
       sessionId: id,
       message: {
-        type: 'text',
-        data: '', // ! Add the default key for flow (start)
+        // ! Add default key and type for flow start (required)
+        type: this.configService.get('DEFAULT_FLOW_KEY_TYPE'),
+        data: this.configService.get('DEFAULT_FLOW_KEY'),
       },
       timestamp,
       context: {
