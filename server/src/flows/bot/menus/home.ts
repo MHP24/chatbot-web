@@ -2,11 +2,11 @@ import { BotMessage } from '../../../flows/types';
 
 export const home: Record<string, BotMessage> = {
   start: {
-    type: 'options',
+    type: 'option',
     header: '¡Hola! Soy el asistente virtual de Miguel',
     body: [{ type: 'text', text: '¿En qué puedo ayudarte hoy?' }],
     data: {
-      options: [
+      option: [
         {
           label: 'Automatiza tu negocio',
           redirect: 'business:portfolio',
@@ -32,7 +32,7 @@ export const home: Record<string, BotMessage> = {
   },
 
   projects: {
-    type: 'options',
+    type: 'option',
     header: 'Te invito a explorar algunos de mis proyectos',
     body: [
       {
@@ -56,7 +56,7 @@ export const home: Record<string, BotMessage> = {
       },
     ],
     data: {
-      options: [
+      option: [
         {
           label: 'Automatiza tu negocio',
           redirect: 'business:portfolio',
@@ -82,7 +82,7 @@ export const home: Record<string, BotMessage> = {
   },
 
   about: {
-    type: 'options',
+    type: 'option',
     header: '¡Hola Soy Miguel! Desarrollador full stack',
     body: [
       {
@@ -95,7 +95,7 @@ export const home: Record<string, BotMessage> = {
       },
     ],
     data: {
-      options: [
+      option: [
         {
           label: 'Automatiza tu negocio',
           redirect: 'business:portfolio',

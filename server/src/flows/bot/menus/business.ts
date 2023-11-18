@@ -2,11 +2,11 @@ import { BotMessage } from '../../../flows/types';
 
 export const business: Record<string, BotMessage> = {
   portfolio: {
-    type: 'options',
+    type: 'option',
     header: '¡Automatiza tu negocio!',
     body: [],
     data: {
-      options: [
+      option: [
         {
           label: 'Dar el siguiente paso',
           redirect: 'contact:start',
@@ -28,11 +28,11 @@ export const business: Record<string, BotMessage> = {
   },
 
   services: {
-    type: 'options',
+    type: 'option',
     header: 'Servicios dentro de mi área de expertís',
     body: [],
     data: {
-      options: [
+      option: [
         {
           label: 'Solicitar servicio',
           redirect: 'contact:start',

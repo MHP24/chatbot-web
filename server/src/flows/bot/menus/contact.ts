@@ -1,11 +1,11 @@
 import { BotMessage } from '../../../flows/types';
 export const contact: Record<string, BotMessage> = {
   start: {
-    type: 'question',
+    type: 'input',
     data: {
-      question: {
+      input: {
         isOptional: false,
-        question: 'Por favor, a continuación ingresa tu email:',
+        input: 'Por favor, a continuación ingresa tu email:',
         regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
         error_message: 'Por favor, ingresa un email válido.',
         on_input_valid: {
@@ -16,11 +16,11 @@ export const contact: Record<string, BotMessage> = {
   },
 
   subject: {
-    type: 'question',
+    type: 'input',
     data: {
-      question: {
+      input: {
         isOptional: false,
-        question: '¿Que información te gustaría recibir?',
+        input: '¿Que información te gustaría recibir?',
         regex: null,
         error_message: 'Por favor, ingresa un asunto válido',
         on_input_valid: {

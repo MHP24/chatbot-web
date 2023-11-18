@@ -15,8 +15,8 @@ export type BodyElement = {
 };
 
 export type Data = {
-  options?: Option[];
-  question?: Question;
+  option?: Option[];
+  input?: Input;
 };
 
 export type Option = {
@@ -24,9 +24,9 @@ export type Option = {
   redirect: string;
 };
 
-export type Question = {
+export type Input = {
   isOptional: boolean;
-  question: string;
+  input: string;
   regex: null | RegExp;
   error_message: string;
   on_input_valid: OnInputValid;

@@ -33,7 +33,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('message')
-  onMessage() {}
+  onMessage(client: Socket, payload: any) {
+    const sessionId = client.handshake.headers.authentication as string;
+    this.chatService.onMessage(this.wss, sessionId, payload);
+  }
 
   @SubscribeMessage('survey')
   onSurvey() {}

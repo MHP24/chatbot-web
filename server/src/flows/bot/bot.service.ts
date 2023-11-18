@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '../../common/types';
-import { getOption } from '../helpers';
-import { MENU } from './menus/main';
+import { ClientMessage, SystemMessage } from '../../common/types';
+import { handleOptionMessage } from '../helpers';
 
 @Injectable()
 export class BotService {
-  handleFlow({ message }: Message) {
+  constructor() {}
+
+  handleFlow({ message }: ClientMessage) {
+    const supportedMessages: Record<
+      string,
+      (message: string) => SystemMessage
+    > = {
+      option: handleOptionMessage,
+    };
+
     const { data, type } = message;
-    if (type === 'option') {
-      const option = getOption(MENU, data);
-      return option;
-    }
-    // console.log({ sessionId, message, context });
+    const messageHandling = supportedMessages[type];
+    return messageHandling ? messageHandling(data) : null;
   }
 }
