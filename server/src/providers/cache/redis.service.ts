@@ -34,7 +34,8 @@ export class RedisService {
 
   /* Complex Redis implementation, key, value (object, suport generics) */
   async getJson<T>(key: string): Promise<T | undefined> {
-    return await this.redisClient.get(key);
+    const result = await this.redisClient.get(key);
+    return result;
   }
 
   async setJson<T>(key: string, value: T) {

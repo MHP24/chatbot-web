@@ -4,4 +4,5 @@ export const JoiValidationSchema = Joi.object({
   PORT: Joi.number(),
   REDIS_HOST: Joi.string(),
   REDIS_PORT: Joi.number(),
+  DEFAULT_FLOW: Joi.string(),
 });

@@ -1,42 +1,90 @@
-import { Injectable } from '@nestjs/common';
-import { GenerateIdAdapter } from 'src/common/adapters';
-// import { Socket } from 'socket.io';
-import { RedisService } from 'src/providers/cache/redis.service';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Server, Socket } from 'socket.io';
+import { GenerateIdAdapter } from '../common/adapters';
+import { Chat, Flow, Message } from '../common/types';
+import { RedisService } from '../providers/cache/redis.service';
+import { FlowService } from 'src/flows/flow.service';
 
 @Injectable()
 export class ChatService {
+  logger = new Logger('ChatService');
+
   constructor(
+    // TODO: add session and flow service
+    private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly generateId: GenerateIdAdapter,
+    private readonly flowService: FlowService,
   ) {}
 
-  // Listeners
-  async onConnect(sessionId: string) {
-    // TODO: add session resource
+  /* Event listeners */
+  async onConnect(server: Server, client: Socket, id: string) {
+    const session = await this.redisService.getJson<Chat>(`chat:${id}`);
 
-    const session = await this.redisService.get(`sessions:${sessionId}`);
-    if (!session) return this.generateId.generate();
+    const room = session?.sessionId ?? this.generateId.generate();
+    client.join(room);
 
-    // TODO: get data from redisService.getJson
+    if (session) {
+      // TODO: emitLoad
+      // this.loadSession(server, room);
+      this.logger.log(`${room} loaded`);
+      return;
+    }
 
-    return true; //TODO: => session data
+    await this.initializeChat(room);
+
+    this.logger.log(`Session ${room} created`);
+    return this.emitSession(server, {
+      sessionId: room,
+      flow: this.configService.get('DEFAULT_FLOW'),
+    });
   }
 
   onDisconnect() {}
   onMessage() {}
   onSurvey() {}
 
-  // Emitters
-  emitSessionLoad() {
-    // TODO: Params, client (socket), data: T
-    // TODO: emit
+  async initializeChat(id: string) {
+    const timestamp = Number(new Date());
+    const defaultFlow = this.configService.get('DEFAULT_FLOW');
+
+    await this.redisService.setJson<Chat>(`chat:${id}`, {
+      sessionId: id,
+      startDate: timestamp,
+      currentFlow: defaultFlow,
+      context: {
+        lastUserInteraction: timestamp,
+      },
+      history: [],
+      log: [],
+    });
+
+    // ! When it's a new user is needed a message
+    // ! to start the flow..
+    const defaultMessage: Message = {
+      sessionId: id,
+      message: {
+        type: 'text',
+        data: '', // ! Add the default key for flow (start)
+      },
+      timestamp,
+      context: {
+        currentFlow: defaultFlow,
+      },
+    };
+    this.flowService.handleFlow(defaultMessage);
+  }
+  /* Event emitters */
+  emitSession(server: Server, context: { sessionId: string; flow: Flow }) {
+    return server.to(context.sessionId).emit('session', context);
   }
 
-  // socket, uuid
-  emitSession() {}
+  emitLoad() {}
 
-  // Interactions
+  /* Chat interactions */
   emitMessage() {}
   emitTransfer() {}
   emitClose() {}
+  emitChatLoad() {} // TODO: =>  last
 }

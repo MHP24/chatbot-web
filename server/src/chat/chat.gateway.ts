@@ -3,9 +3,10 @@ import {
   SubscribeMessage,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 
 // ! http://127.0.0.1:3001/socket.io/socket.io.js
@@ -15,14 +16,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly chatService: ChatService) {}
 
+  @WebSocketServer()
+  wss: Server;
+
   handleConnection(client: Socket) {
-    this.logger.log(`${client.id} connected`);
-    this.chatService.onConnect(client.handshake.headers.sessionId as string);
+    return this.chatService.onConnect(
+      this.wss,
+      client,
+      (client.handshake.headers.authentication as string) ?? '',
+    );
   }
 
   handleDisconnect(client: Socket) {
+    // TODO: Get headers and setTimeout
     console.log(`Disconnected ${client.id}`);
-    // console.log({ client });
   }
 
   @SubscribeMessage('message')
