@@ -4,6 +4,7 @@ import { type Flow } from './chat'
 /* Listeners */
 export type OnSession = {
   sessionId: string
+  flow: Flow
 }
 
 export type OnLoad = {

@@ -16,7 +16,7 @@ export type ImageMessage = {
 }
 
 export type OptionMessage = {
-  options: Array<{
+  option: Array<{
     label: string
     redirect: string
   }>

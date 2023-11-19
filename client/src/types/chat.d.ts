@@ -11,7 +11,7 @@ export type Chat = {
 
 export type ChatState = & Chat
 
-// TODO: add fns
 export type ChatContextT = {
   establishConnection: () => void
+  sendMessage: (type: string, message: string) => void
 } & Chat
