@@ -4,14 +4,22 @@ import { ClientMessage, SystemMessage } from '../common/types';
 
 @Injectable()
 export class FlowService {
-  flows: Record<
+  private flows: Record<
     string,
     (message: ClientMessage) => Promise<SystemMessage | null>
-  > = {
-    bot: this.botService.handleFlow,
-  };
+  >;
 
-  constructor(private readonly botService: BotService) {}
+  constructor(private readonly botService: BotService) {
+    this.flows = {
+      bot: this.handleBotFlow.bind(this),
+    };
+  }
+
+  private async handleBotFlow(
+    message: ClientMessage,
+  ): Promise<SystemMessage | null> {
+    return this.botService.handleFlow(message);
+  }
 
   async handleFlow(clientMessage: ClientMessage) {
     console.log({ clientMessage });
@@ -20,7 +28,9 @@ export class FlowService {
     } = clientMessage;
 
     const flowExecution = this.flows[currentFlow];
-    if (!flowExecution) throw new Error(`Flow unsupported: ${currentFlow}`);
+    if (!flowExecution) {
+      throw new Error(`Flow unsupported: ${currentFlow}`);
+    }
 
     return await flowExecution(clientMessage);
   }

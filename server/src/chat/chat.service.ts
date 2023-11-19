@@ -53,9 +53,7 @@ export class ChatService {
         data: data.message,
       },
       timestamp: Number(new Date()),
-      context: {
-        currentFlow: session.context.currentFlow,
-      },
+      context: session.context,
     });
 
     flowResponse && this.emitMessage(server, sessionId, flowResponse);

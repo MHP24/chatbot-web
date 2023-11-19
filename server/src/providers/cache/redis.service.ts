@@ -7,7 +7,9 @@ export class RedisService {
   private redisClient;
 
   constructor() {
-    /* Connection instance with redis running from Docker container */
+    /* Connection instance with redis 
+      running from Docker container 
+    */
     if (!this.redisClient) {
       this.connect();
     }
@@ -20,15 +22,15 @@ export class RedisService {
   }
 
   async get<T>(key: string): Promise<T | undefined> {
-    try {
-      const result = await this.redisClient.get(key);
-      return result;
-    } catch (error) {
-      return undefined;
-    }
+    const result = await this.redisClient.json.get(key);
+    return result;
   }
 
   async set<T>(key: string, value: T) {
     return await this.redisClient.json.set(key, '.', value);
+  }
+
+  async update<T>(key: string, prop: string, value: T) {
+    return await this.redisClient.json.set(key, `.${prop}`, value);
   }
 }
