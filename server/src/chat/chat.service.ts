@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Server, Socket } from 'socket.io';
 import { GenerateIdAdapter } from '../common/adapters';
-import { Chat, Flow, ClientMessage, MessageType } from '../common/types';
+import { Chat, Flow, ClientMessage, EntryClientMessage } from '../common/types';
 import { RedisService } from '../providers/cache/redis.service';
 import { FlowService } from 'src/flows/flow.service';
 import { BotMessage } from 'src/flows/types';
@@ -21,14 +21,13 @@ export class ChatService {
 
   /* Event listeners */
   async onConnect(server: Server, client: Socket, id: string) {
-    const session = await this.redisService.getJson<Chat>(`chat:${id}`);
+    const session = await this.redisService.get<Chat>(`chat:${id}`);
 
     const room = id;
     client.join(room);
 
     if (session) {
       // TODO: emitLoad
-      // this.loadSession(server, room);
       this.logger.log(`${room} loaded`);
       return;
     }
@@ -44,15 +43,10 @@ export class ChatService {
 
   onDisconnect() {}
 
-  async onMessage(
-    server: Server,
-    sessionId: string,
-    data: { type: MessageType; message: string },
-  ) {
-    // console.log({ server, sessionId, data });
-    // const session = await this.redisService.getJson<Chat>(`chat:${sessionId}`);
+  async onMessage(server: Server, sessionId: string, data: EntryClientMessage) {
+    const session = await this.redisService.get<Chat>(`chat:${sessionId}`);
 
-    const flowResponse = this.flowService.handleFlow({
+    const flowResponse = await this.flowService.handleFlow({
       sessionId,
       message: {
         type: data.type,
@@ -60,14 +54,12 @@ export class ChatService {
       },
       timestamp: Number(new Date()),
       context: {
-        currentFlow: 'bot',
+        currentFlow: session.context.currentFlow,
       },
     });
 
     flowResponse && this.emitMessage(server, sessionId, flowResponse);
   }
-
-  onSurvey() {}
 
   /* Event emitters */
   emitSession(server: Server, context: { sessionId: string; flow: Flow }) {
@@ -82,18 +74,18 @@ export class ChatService {
   }
   emitTransfer() {}
   emitClose() {}
-  emitChatLoad() {} // TODO: =>  last
+  emitChatLoad() {}
 
   async initializeChat(server: Server, id: string) {
     const timestamp = Number(new Date());
     const defaultFlow = this.configService.get('DEFAULT_FLOW');
 
-    await this.redisService.setJson<Chat>(`chat:${id}`, {
+    await this.redisService.set<Chat>(`chat:${id}`, {
       sessionId: id,
       startDate: timestamp,
-      currentFlow: defaultFlow,
+      lastUserInteraction: timestamp,
       context: {
-        lastUserInteraction: timestamp,
+        currentFlow: defaultFlow,
       },
       history: [],
       log: [],
@@ -111,7 +103,7 @@ export class ChatService {
       },
     };
 
-    const flowResponse = this.flowService.handleFlow(defaultMessage);
+    const flowResponse = await this.flowService.handleFlow(defaultMessage);
     flowResponse && this.emitMessage(server, id, flowResponse);
   }
 }

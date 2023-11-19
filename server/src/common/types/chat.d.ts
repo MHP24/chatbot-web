@@ -1,12 +1,30 @@
+import { BotMessage } from '../../flows/types';
+import { EntryClientMessage } from '.';
+
 export type Flow = 'bot' | 'agent' | 'survey';
+export type ChatSide = 'client' | 'bot' | 'agent';
 
 export type Chat = {
   sessionId: string;
-  currentFlow: Flow;
   startDate: number;
-  context: any; //TODO: assign types
-  log: any; //TODO: assign types
-  history: any; //TODO: assign types
+  lastUserInteraction: number;
+  context: ChatContext;
+  //TODO: assign types
+  log: any;
+  history: any;
 };
 
-export type ChatContext = 1; // TODO:
+export type ChatContext = {
+  currentFlow: Flow;
+  bot?: BotContext;
+  // More flows...
+};
+
+export type BotContext = {
+  currentMenu: string;
+  data: BotMessage;
+  messages: Array<{
+    side: ChatSide;
+    content: BotMessage | EntryClientMessage;
+  }>;
+};

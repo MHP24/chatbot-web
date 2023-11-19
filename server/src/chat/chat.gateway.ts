@@ -8,8 +8,8 @@ import {
 import { ChatService } from './chat.service';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
+import { EntryClientMessage } from 'src/common/types';
 
-// ! http://127.0.0.1:3001/socket.io/socket.io.js
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   logger = new Logger('ChatGateway');
@@ -28,12 +28,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    // TODO: Get headers and setTimeout
-    console.log(`Disconnected ${client.id}`);
+    this.logger.log(`Disconnected ${client.id}`);
   }
 
   @SubscribeMessage('message')
-  onMessage(client: Socket, payload: any) {
+  onMessage(client: Socket, payload: EntryClientMessage) {
     const sessionId = client.handshake.headers.authentication as string;
     this.chatService.onMessage(this.wss, sessionId, payload);
   }

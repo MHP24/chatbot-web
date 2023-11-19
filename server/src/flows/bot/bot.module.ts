@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { BotService } from './bot.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  controllers: [],
+  imports: [ConfigModule],
   providers: [BotService],
   exports: [BotService],
 })

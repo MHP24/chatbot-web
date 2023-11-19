@@ -1,6 +1,12 @@
+import { ChatContext } from '.';
 import { BodyElement, Option } from 'src/flows/types';
 
 export type MessageType = 'input' | 'option';
+
+export type EntryClientMessage = {
+  type: MessageType;
+  message: string;
+};
 
 export type ClientMessage = {
   sessionId: string;
@@ -9,7 +15,7 @@ export type ClientMessage = {
     data: string;
   };
   timestamp: number;
-  context: any;
+  context: ChatContext;
 };
 
 export type SystemMessage = {
