@@ -1,19 +1,29 @@
 import { BotContext, SystemMessage } from 'src/common/types';
 import { MENU } from '../bot/menus/main';
-import { getOption } from '.';
+import { getOptionBySelection, getOptionBySearch } from '.';
 
 export const handleOptionMessage = (
   message: string,
   context: BotContext,
 ): SystemMessage => {
-  console.log({ context });
-
-  const option = getOption(MENU, message);
+  const option = getOptionBySelection(MENU, message);
   if (option) return option;
 
-  // const words = message.trim().split(' ');
+  // TODO: search similar
+  const { data, type } = context.data;
+  const search = getOptionBySearch(data[type], message);
+  if (search) {
+    return getOptionBySelection(MENU, search.redirect);
+  }
 
-  // search
+  return {
+    type: 'option',
+    header: 'No ntendi',
+    body: [{ type: 'text', text: 'Selecciona una opción válida' }],
+    data: {
+      option: data[type],
+    },
+  } as SystemMessage;
 };
 
 // export const handleInputMessage = (): SystemMessage => {

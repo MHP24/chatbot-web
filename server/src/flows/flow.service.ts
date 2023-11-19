@@ -22,7 +22,6 @@ export class FlowService {
   }
 
   async handleFlow(clientMessage: ClientMessage) {
-    console.log({ clientMessage });
     const {
       context: { currentFlow },
     } = clientMessage;

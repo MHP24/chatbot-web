@@ -28,8 +28,6 @@ export class BotService {
       option: handleOptionMessage,
     };
 
-    console.log({ context });
-
     const { data, type } = !context
       ? {
           type: this.configService.get('DEFAULT_FLOW_KEY_TYPE'),
@@ -42,8 +40,11 @@ export class BotService {
 
     const botOutput = messageHandling(data, context.bot);
 
+    // TODO: if botOutput is null return a invalid option and current options
+    console.log(JSON.stringify(botOutput, null, 2));
+
     if (!context || botOutput) {
-      this.redisService.update<ChatContext>(`chat:${sessionId}`, 'context', {
+      const contextUpdated: ChatContext = {
         ...context,
         bot: {
           currentMenu: data,
@@ -63,7 +64,13 @@ export class BotService {
             },
           ],
         },
-      });
+      };
+
+      this.redisService.update<ChatContext>(
+        `chat:${sessionId}`,
+        'context',
+        contextUpdated,
+      );
 
       return botOutput;
     }
