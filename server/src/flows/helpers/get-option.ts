@@ -18,7 +18,10 @@ export const getOptionBySelection = (
   }, menu);
 };
 
-export const getOptionBySearch = (options: Option[], term: string) => {
+export const getOptionBySearch = (
+  options: Option[],
+  term: string,
+): Option | null => {
   const fuse = new Fuse(options, {
     keys: ['label'],
     threshold: 0.5,

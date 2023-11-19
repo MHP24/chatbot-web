@@ -1,7 +1,12 @@
 import { ChatContext } from '.';
-import { BodyElement, Option } from 'src/flows/types';
+import { BodyElement, Input, Option } from 'src/flows/types';
 
-export type MessageType = 'input' | 'option';
+export type MessageType =
+  | 'input'
+  | 'option'
+  | 'close'
+  | 'action'
+  | 'action_with_close';
 
 export type EntryClientMessage = {
   type: MessageType;
@@ -20,7 +25,10 @@ export type ClientMessage = {
 
 export type SystemMessage = {
   type: MessageType;
-  header: string;
-  body: BodyElement[];
-  option?: Option[];
+  header?: string;
+  body?: BodyElement[];
+  data: {
+    option?: Option[];
+    input?: Input;
+  };
 };

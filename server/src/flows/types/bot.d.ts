@@ -1,5 +1,7 @@
+import { MessageType } from '../../common/types';
+
 export type BotMessage = {
-  type: string;
+  type: MessageType;
   header?: string;
   body?: BodyElement[] | string;
   data?: Data;
@@ -27,7 +29,7 @@ export type Option = {
 export type Input = {
   isOptional: boolean;
   input: string;
-  regex: null | RegExp;
+  regex: null | string; // ! Transform to regex when is necessary (use string to store db, json...)
   error_message: string;
   on_input_valid: OnInputValid;
 };

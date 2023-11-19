@@ -3,9 +3,11 @@ import {
   BotContext,
   ChatContext,
   ClientMessage,
+  EntryClientMessage,
+  MessageType,
   SystemMessage,
 } from '../../common/types';
-import { handleOptionMessage } from '../helpers';
+import { handleInputMessage, handleOptionMessage } from '../helpers';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/providers/cache/redis.service';
 
@@ -26,41 +28,41 @@ export class BotService {
       (message: string, context: BotContext) => SystemMessage
     > = {
       option: handleOptionMessage,
+      input: handleInputMessage,
     };
 
-    const { data, type } = !context
-      ? {
-          type: this.configService.get('DEFAULT_FLOW_KEY_TYPE'),
-          data: this.configService.get('DEFAULT_FLOW_KEY'),
-        }
-      : message;
+    const { type = `${this.configService.get('DEFAULT_FLOW_KEY_TYPE')}` } =
+      context.bot?.data ?? {};
+
+    const { data } = message;
 
     const messageHandling = supportedMessages[type];
     if (!messageHandling) return null;
 
-    const botOutput = messageHandling(data, context.bot);
+    const botResponse = messageHandling(data, context.bot);
 
-    // TODO: if botOutput is null return a invalid option and current options
-    console.log(JSON.stringify(botOutput, null, 2));
+    if (!context || botResponse) {
+      // TODO: move to helper
 
-    if (!context || botOutput) {
+      const clientMessage: EntryClientMessage = {
+        type: type as MessageType,
+        message: data,
+      };
+
       const contextUpdated: ChatContext = {
         ...context,
         bot: {
           currentMenu: data,
-          data: botOutput,
+          data: botResponse,
           messages: [
             ...(context.bot?.messages ?? []),
             {
               side: 'client',
-              content: {
-                type,
-                data,
-              },
+              content: clientMessage,
             },
             {
               side: 'bot',
-              content: botOutput,
+              content: botResponse,
             },
           ],
         },
@@ -72,7 +74,7 @@ export class BotService {
         contextUpdated,
       );
 
-      return botOutput;
+      return botResponse;
     }
   }
 }

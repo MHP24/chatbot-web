@@ -6,7 +6,7 @@ export const contact: Record<string, BotMessage> = {
       input: {
         isOptional: false,
         input: 'Por favor, a continuación ingresa tu email:',
-        regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+        regex: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
         error_message: 'Por favor, ingresa un email válido.',
         on_input_valid: {
           redirect: 'contact:subject',
