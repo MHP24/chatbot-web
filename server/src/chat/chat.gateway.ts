@@ -3,25 +3,39 @@ import {
   SubscribeMessage,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { Logger } from '@nestjs/common';
+import { EntryClientMessage } from 'src/common/types';
 
-// ! http://127.0.0.1:3001/socket.io/socket.io.js
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  logger = new Logger('ChatGateway');
+
   constructor(private readonly chatService: ChatService) {}
 
+  @WebSocketServer()
+  wss: Server;
+
   handleConnection(client: Socket) {
-    console.log({ client });
+    return this.chatService.onConnect(
+      this.wss,
+      client,
+      (client.handshake.headers.authentication as string) ?? '',
+    );
   }
 
   handleDisconnect(client: Socket) {
-    console.log({ client });
+    this.logger.log(`Disconnected ${client.id}`);
   }
 
   @SubscribeMessage('message')
-  onMessage() {}
+  onMessage(client: Socket, payload: EntryClientMessage) {
+    const sessionId = client.handshake.headers.authentication as string;
+    this.chatService.onMessage(this.wss, sessionId, payload);
+  }
 
   @SubscribeMessage('survey')
   onSurvey() {}

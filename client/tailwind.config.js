@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       aspectRatio: {
-        '10/16': '10/16'
+        '10/16': '8/16'
       },
       colors: {
         'c1': '#FFFFFF',
-        'c2': '#E5E7EB',
+        'c2': '#EAEEF3',
         'c3': '#000000',
         'c4': '#2563EB',
         'online': '#22C55E',
