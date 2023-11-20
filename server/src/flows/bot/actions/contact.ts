@@ -10,8 +10,6 @@ export const contact = (
     header = header.replace(`$${i}`, answer);
   });
 
-  console.log({ header });
-
   return {
     ...sysResponse,
     header,

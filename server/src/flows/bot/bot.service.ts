@@ -6,7 +6,11 @@ import {
   MessageType,
   SystemMessage,
 } from '../../common/types';
-import { handleInputMessage, handleOptionMessage } from '../helpers';
+import {
+  handleActionMessage,
+  handleInputMessage,
+  handleOptionMessage,
+} from '../helpers';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { BotResponse } from '../types';
@@ -25,6 +29,7 @@ export class BotService {
       (message: string, context: BotContext) => BotResponse
     > = {
       option: handleOptionMessage,
+      action: handleActionMessage,
       input: handleInputMessage,
     };
 

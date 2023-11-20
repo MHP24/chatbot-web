@@ -32,6 +32,16 @@ export const handleOptionMessage = (
   };
 };
 
+export const handleActionMessage = (
+  message: string,
+  context: BotContext,
+): BotResponse => {
+  if (context.data.data.option) {
+    context.data.type = 'option';
+    return handleOptionMessage(message, context);
+  }
+};
+
 export const handleInputMessage = (
   message: string,
   context: BotContext,
@@ -67,7 +77,6 @@ export const handleInputMessage = (
     return { response: nextStep, data: { isValidAnswer: true } };
   }
 
-  // TODO: Handle next step sending all valid answers
   const answers = context.messages
     .filter(
       ({ side, reference }) =>
