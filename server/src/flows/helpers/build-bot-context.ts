@@ -11,15 +11,12 @@ type Builder = {
 };
 
 export const buildBotContext = (data: Builder): ChatContext => {
-  console.log({ data });
   const { botResponse, clientMessage } = data;
 
   const clientEntry: EntryClientMessage = {
     type: clientMessage.message.type,
     message: clientMessage.message.data,
   };
-
-  console.log({ clientEntry });
 
   const contextUpdated: ChatContext = {
     ...clientMessage.context,
@@ -31,24 +28,21 @@ export const buildBotContext = (data: Builder): ChatContext => {
         {
           side: 'client',
           content: clientEntry,
+          timestamp: clientMessage.timestamp,
+          reference: !data.botResponse.data
+            ? null
+            : data.botResponse.data.isValidAnswer
+            ? 'input'
+            : 'input-invalid',
         },
         {
           side: 'bot',
           content: botResponse.response,
+          timestamp: Number(new Date()),
         },
       ],
     },
   };
 
-  // const handleByType: Record<string, () => void> = {
-  //   option: handleOptionContext,
-  //   input: handleInputContext,
-  // };
-  //
-
   return contextUpdated;
 };
-
-export const handleInputContext = () => {};
-
-export const handleOptionContext = () => {};

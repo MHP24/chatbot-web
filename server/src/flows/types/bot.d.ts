@@ -38,6 +38,8 @@ export type OnInputValid = {
 };
 
 export type BotResponse = {
-  data?: any;
+  data?: {
+    isValidAnswer: boolean;
+  };
   response: SystemMessage;
 };

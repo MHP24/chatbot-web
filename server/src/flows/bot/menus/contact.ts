@@ -30,14 +30,21 @@ export const contact: Record<string, BotMessage> = {
 
   send: {
     type: 'action',
-    header: '¡Muchas gracias por tu tiempo!',
+    header:
+      '¡Muchas gracias por tu tiempo!\n Tus datos son: Correo electrónico: $0 \nAsunto: $1',
     body: [
       {
         type: 'text',
         text: 'Miguel se pondrá en contacto a la brevedad posible',
       },
-      { type: 'text', text: '¡Adios!' },
+      { type: 'text', text: '¿Necesitas algo más?' },
     ],
+    data: {
+      option: [
+        { label: 'Si', redirect: 'home:start' },
+        { label: 'No', redirect: 'home:exit' },
+      ],
+    },
     action: 'contact',
     parameters_required: 2,
   },

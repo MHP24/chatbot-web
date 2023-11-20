@@ -1,6 +1,10 @@
-import { BotContext, SystemMessage } from '../../common/types';
+import {
+  BotContext,
+  EntryClientMessage,
+  SystemMessage,
+} from '../../common/types';
 import { MENU } from '../bot/menus/main';
-import { getOptionBySelection, getOptionBySearch } from '.';
+import { getOptionBySelection, getOptionBySearch, handleNextStep } from '.';
 import { BotResponse, Input } from '../types';
 
 export const handleOptionMessage = (
@@ -54,12 +58,24 @@ export const handleInputMessage = (
     };
   }
 
-  // TODO: Search next step and check if it's action to Call action
-
   const nextStep = getOptionBySelection(
     MENU,
     validation.on_input_valid.redirect,
   );
 
-  return { response: nextStep };
+  if (nextStep.type === 'input') {
+    return { response: nextStep, data: { isValidAnswer: true } };
+  }
+
+  // TODO: Handle next step sending all valid answers
+  const answers = context.messages
+    .filter(
+      ({ side, reference }) =>
+        side === 'client' && reference && reference === 'input',
+    )
+    .map(({ content }) => (content as EntryClientMessage).message);
+
+  return {
+    response: handleNextStep(nextStep.type, nextStep, [...answers, message]),
+  };
 };
