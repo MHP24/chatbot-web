@@ -55,9 +55,10 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   const sendOption = (label: string, redirect: string) => {
+    console.log({ label, redirect })
     sendMessage('option', redirect)
     dispatch({
-      type: '[Message] - Add option message',
+      type: '[Message] - Add input message',
       payload: label
     })
   }

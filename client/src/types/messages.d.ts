@@ -15,9 +15,9 @@ export type Option = {
 
 export type Input = {
   input: string
-  regex: null | string
-  error_message: string
-  on_input_valid: OnInputValid
+  regex?: null | string
+  error_message?: string
+  on_input_valid?: OnInputValid
 }
 
 export type OnInputValid = {

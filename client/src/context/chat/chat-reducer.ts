@@ -11,7 +11,7 @@ type Action = {
   type: '[Message] - Receive'
   payload: Message
 } | {
-  type: '[Message] - Add option message'
+  type: '[Message] - Add input message'
   payload: string
 }
 
@@ -36,21 +36,21 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
         }]
       }
 
-    case '[Message] - Add option message':
+    case '[Message] - Add input message':
       return {
-        ...state
-      //   messages: [
-      //     ...state.messages,
-      //     {
-      //       side: 'client',
-      //       type: 'input',
-      //       body: [{
-      //         type: 'text',
-      //         text: action.payload
-      //       }]
-      //     } as Message
-      //   ]
-      // }
+        ...state,
+        messages: [
+          ...state.messages,
+          {
+            type: 'input',
+            side: 'client',
+            data: {
+              input: {
+                input: action.payload
+              }
+            }
+          }
+        ]
       }
     default:
       return state
