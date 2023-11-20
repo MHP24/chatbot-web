@@ -46,7 +46,7 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
             side: 'client',
             data: {
               input: {
-                input: action.payload
+                detail: action.payload
               }
             }
           }

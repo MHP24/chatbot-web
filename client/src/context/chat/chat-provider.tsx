@@ -41,7 +41,6 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const receiveMessage = (onMessage: OnMessage) => {
     const { message } = onMessage
-    console.log({ message })
     dispatch({
       type: '[Message] - Receive',
       payload: message
