@@ -56,6 +56,12 @@ export class ChatService {
       context: session.context,
     });
 
+    // if (flowResponse.hasToClose) {
+    //   setTimeout(() => {
+    //  emit..
+    //   }, 3000);
+    // }
+
     flowResponse && this.emitMessage(server, sessionId, flowResponse);
   }
 

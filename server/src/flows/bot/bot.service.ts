@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   BotContext,
   ChatContext,
@@ -11,7 +12,6 @@ import {
   handleInputMessage,
   handleOptionMessage,
 } from '../helpers';
-import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { BotResponse } from '../types';
 import { buildBotContext } from '../helpers';
@@ -58,6 +58,9 @@ export class BotService {
       contextUpdated,
     );
 
-    return botResponse.response;
+    return {
+      ...botResponse.response,
+      hasToClose: botResponse.response.type === 'close',
+    };
   }
 }

@@ -22,6 +22,7 @@ export class FlowService {
   }
 
   async handleFlow(clientMessage: ClientMessage) {
+    // TODO: add refresh
     const {
       context: { currentFlow },
     } = clientMessage;

@@ -26,4 +26,6 @@ export type SystemMessage = {
     option?: Option[];
     input?: Input;
   };
+  // Interactions
+  hasToClose?: boolean;
 };

@@ -36,6 +36,8 @@ export const handleActionMessage = (
   message: string,
   context: BotContext,
 ): BotResponse => {
+  // ! If other interaction is needed you must to change
+  // ! action type -> option, and send the rest of options
   if (context.data.data.option) {
     context.data.type = 'option';
     return handleOptionMessage(message, context);
