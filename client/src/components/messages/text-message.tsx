@@ -1,24 +1,33 @@
-/*
-  TODO: side-color, side-border, side-background
-*/
-
 import { type FC } from 'react'
 
 type Props = {
   side: string
   text: string
+  timestamp?: number
 }
 
-export const TextMessage: FC<Props> = ({ side, text }) => {
-  const styles = side !== 'client' ? 'bg-c1' : 'bg-c4 text-c1'
+export const TextMessage: FC<Props> = ({ side, text, timestamp }) => {
+  const isClient = side !== 'client'
+  const styles = isClient
+    ? 'bg-c1 mr-0 rounded-tl-none'
+    : 'bg-c4 text-c1 ml-0 rounded-tr-none'
+  const containerStyles = isClient ? 'justify-start' : 'justify-end'
+
+  const date = new Date(timestamp ?? 0)
+
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+
+  const time = `${hours}:${minutes}`
 
   return (
-    <div>
-      <p className={
-        `${styles} text-md w-fit max-w-[85%] py-2 px-4 rounded-xl rounded-tl-none shadow-sm`
-      }>
-        {text}
-      </p>
+    <div className={` flex ${containerStyles}`}>
+      <div
+        className={`flex items-end gap-2 rounded-xl text-md w-fit max-w-[90%] py-2 px-6 shadow-sm ${styles}`}
+      >
+        <p className="text-md ">{text}</p>
+        {timestamp && <small className="text-[.7rem] text-end opacity-50">{time}</small>}
+      </div>
     </div>
   )
 }

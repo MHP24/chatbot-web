@@ -1,4 +1,4 @@
-export type MessageType = 'input' | 'option' | 'close' | 'action'
+export type MessageType = 'input' | 'option'
 export type MessageSide = 'system' | 'client'
 
 export type BodyElement = {
@@ -30,6 +30,7 @@ export type Message = {
     option?: Option[]
     input?: Input
   }
+  timestamp: number
   // Interactions
   hasToClose?: boolean
 }

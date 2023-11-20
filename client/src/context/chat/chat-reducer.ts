@@ -48,7 +48,8 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
               input: {
                 detail: action.payload
               }
-            }
+            },
+            timestamp: Number(new Date())
           }
         ]
       }

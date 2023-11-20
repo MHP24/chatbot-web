@@ -5,15 +5,17 @@ export const MessagesContainer = () => {
   const { messages } = useChat()
 
   return (
-    <ul className="flex flex-col gap-4 w-full h-full m-auto p-4">
-      {messages?.map(({ header, body, data, side }, i) => (
+    <ul className="flex flex-col gap-6 w-full h-full m-auto p-4">
+      {messages?.map(({ header, body, data, side, timestamp }, i) => (
         <li key={`message-${i}`}>
           {/*  */}
-          {header && <TextMessage side={side} text={header} />}
+          {header && (
+            <TextMessage side={side} text={header} timestamp={timestamp} />
+          )}
 
           {/*  */}
           {body && (
-            <>
+            <div className='my-4'>
               {body
                 .slice(0, data.option ? -1 : body.length)
                 .map(
@@ -23,10 +25,11 @@ export const MessagesContainer = () => {
                         key={`message-${i}-${j}`}
                         side={side}
                         text={text}
+                        timestamp={timestamp}
                       />
                     )
                 )}
-            </>
+            </div>
           )}
 
           {/*  */}
@@ -43,6 +46,7 @@ export const MessagesContainer = () => {
               key={`input-message-${i}`}
               text={data.input?.detail}
               side={side}
+              timestamp={timestamp}
             />
           )}
         </li>
