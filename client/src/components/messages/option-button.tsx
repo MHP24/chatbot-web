@@ -1,4 +1,5 @@
 import { type FC } from 'react'
+import { useChat } from '../../hooks'
 
 type Props = {
   label: string
@@ -6,15 +7,17 @@ type Props = {
 }
 
 export const OptionButton: FC<Props> = ({ label, redirect }) => {
+  const { sendOption } = useChat()
+
   const onClick = () => {
-    console.log({ redirect })
+    sendOption(label, redirect)
   }
 
   return (
     <button
       onClick={onClick}
-      className='border-2 border-c4 bg-c1 hover:bg-c2 transition-all delay-75
-        w-full max-w-[70%] m-auto p-2 text-c4 font-bold rounded-full'
+      className='border-t-2 border-c2 bg-c1 hover:bg-c2 transition-all delay-75
+        w-full m-auto p-2 text-c4 font-semibold'
     >
       {label}
     </button>

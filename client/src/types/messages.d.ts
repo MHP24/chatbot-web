@@ -1,4 +1,5 @@
 export type MessageType = 'input' | 'option' | 'close' | 'action'
+export type MessageSide = 'system' | 'client'
 
 export type BodyElement = {
   type: string
@@ -24,6 +25,7 @@ export type OnInputValid = {
 }
 
 export type Message = {
+  side: MessageSide
   type: MessageType
   header?: string
   body?: BodyElement[]

@@ -1,4 +1,4 @@
-import { type OnMessage, type OnSession } from '../../types'
+import { type Message, type OnSession } from '../../types'
 import { type ChatState } from '../../types/chat'
 
 type Action = {
@@ -9,7 +9,10 @@ type Action = {
   payload: OnSession
 } | {
   type: '[Message] - Receive'
-  payload: OnMessage
+  payload: Message
+} | {
+  type: '[Message] - Add option message'
+  payload: string
 }
 
 export const chatReducer = (state: ChatState, action: Action): ChatState => {
@@ -27,9 +30,28 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
     case '[Message] - Receive':
       return {
         ...state,
-        messages: [...state.messages, action.payload]
+        messages: [...state.messages, {
+          ...action.payload,
+          side: 'system'
+        }]
       }
 
+    case '[Message] - Add option message':
+      return {
+        ...state
+      //   messages: [
+      //     ...state.messages,
+      //     {
+      //       side: 'client',
+      //       type: 'input',
+      //       body: [{
+      //         type: 'text',
+      //         text: action.payload
+      //       }]
+      //     } as Message
+      //   ]
+      // }
+      }
     default:
       return state
   }

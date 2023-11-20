@@ -39,8 +39,8 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
-  const receiveMessage = (message: OnMessage) => {
-    console.log({ message })
+  const receiveMessage = (onMessage: OnMessage) => {
+    const { message } = onMessage
     dispatch({
       type: '[Message] - Receive',
       payload: message
@@ -54,9 +54,22 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  const sendOption = (label: string, redirect: string) => {
+    sendMessage('option', redirect)
+    dispatch({
+      type: '[Message] - Add option message',
+      payload: label
+    })
+  }
+
   return (
     <ChatContext.Provider
-      value={{ ...state, establishConnection, sendMessage }}
+      value={{
+        ...state,
+        establishConnection,
+        sendMessage,
+        sendOption
+      }}
     >
       {children}
     </ChatContext.Provider>
