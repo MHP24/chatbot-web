@@ -119,6 +119,11 @@ export const home: Record<string, BotMessage> = {
   exit: {
     type: 'close',
     header: '¡Gracias por tu tiempo!',
-    body: 'Si tienes más preguntas, no dudes en volver. ¡Que tengas un gran día!',
+    body: [
+      {
+        type: 'text',
+        text: 'Si tienes más preguntas, no dudes en volver. ¡Que tengas un gran día!',
+      },
+    ],
   },
 };

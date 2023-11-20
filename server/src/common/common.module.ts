@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { GenerateIdAdapter } from './adapters';
+import { BotClientResponseAdapter, GenerateIdAdapter } from './adapters';
 
 @Module({
-  providers: [GenerateIdAdapter],
-  exports: [GenerateIdAdapter],
+  providers: [GenerateIdAdapter, BotClientResponseAdapter],
+  exports: [GenerateIdAdapter, BotClientResponseAdapter],
 })
 export class CommonModule {}

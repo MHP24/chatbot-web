@@ -15,10 +15,6 @@ export const useAction = (sysResponse: BotMessage, answers: string[]) => {
   const action = actions[sysResponse.action];
   if (!action) throw new Error(`Action not supported: ${sysResponse.action}`);
 
-  // if (sysResponse.data.option) {
-  //   sysResponse.type = 'option';
-  // }
-
   return action(sysResponse, args);
 };
 

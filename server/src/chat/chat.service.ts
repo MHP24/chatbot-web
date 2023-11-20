@@ -57,9 +57,8 @@ export class ChatService {
     });
 
     // if (flowResponse.hasToClose) {
-    //   setTimeout(() => {
-    //  emit..
-    //   }, 3000);
+    //   this.emitClose(server, sessionId);
+    //   return;
     // }
 
     flowResponse && this.emitMessage(server, sessionId, flowResponse);
@@ -74,7 +73,7 @@ export class ChatService {
 
   /* Chat interactions */
   emitMessage(server: Server, sessionId: string, message: BotMessage) {
-    return server.to(sessionId).emit('message', message);
+    return server.to(sessionId).emit('message', { message });
   }
   emitTransfer() {}
   emitClose() {}

@@ -15,12 +15,14 @@ import {
 import { RedisService } from 'src/providers/cache/redis.service';
 import { BotResponse } from '../types';
 import { buildBotContext } from '../helpers';
+import { BotClientResponseAdapter } from 'src/common/adapters';
 
 @Injectable()
 export class BotService {
   constructor(
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
+    private readonly botClientResponseAdapter: BotClientResponseAdapter,
   ) {}
 
   async handleFlow(clientMessage: ClientMessage): Promise<SystemMessage> {
@@ -58,8 +60,13 @@ export class BotService {
       contextUpdated,
     );
 
+    // ! Adapter for client (primitive types, input, option)
+    const adapterForClient = this.botClientResponseAdapter.adapt(
+      botResponse.response,
+    );
+
     return {
-      ...botResponse.response,
+      ...(adapterForClient as SystemMessage),
       hasToClose: botResponse.response.type === 'close',
     };
   }
