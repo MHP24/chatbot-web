@@ -27,7 +27,7 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
     case '[Message] - Receive':
       return {
         ...state,
-        messages: [/* ...state.messages, */action.payload]
+        messages: [...state.messages, action.payload]
       }
 
     default:

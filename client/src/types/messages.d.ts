@@ -1,23 +1,36 @@
-export type MessageSide = 'user' | 'bot' | 'agent'
+export type MessageType = 'input' | 'option' | 'close' | 'action'
 
-export type Message<T> = {
-  side: MessageSide
-  time: number
-  data: T
+export type BodyElement = {
+  type: string
+  text?: string
+  image?: string
+  caption?: string
 }
 
-export type TextMessage = {
-  text: string
+export type Option = {
+  label: string
+  redirect: string
 }
 
-export type ImageMessage = {
-  image: string
-  caption: string
+export type Input = {
+  input: string
+  regex: null | string
+  error_message: string
+  on_input_valid: OnInputValid
 }
 
-export type OptionMessage = {
-  option: Array<{
-    label: string
-    redirect: string
-  }>
+export type OnInputValid = {
+  redirect: string
+}
+
+export type Message = {
+  type: MessageType
+  header?: string
+  body?: BodyElement[]
+  data: {
+    option?: Option[]
+    input?: Input
+  }
+  // Interactions
+  hasToClose?: boolean
 }

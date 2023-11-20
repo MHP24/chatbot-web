@@ -2,11 +2,22 @@
   TODO: side-color, side-border, side-background
 */
 
-export const TextMessage = () => {
+import { type FC } from 'react'
+
+type Props = {
+  side: string
+  text: string
+}
+
+export const TextMessage: FC<Props> = ({ side, text }) => {
+  const styles = side !== 'client' ? 'bg-c1' : 'bg-c4 text-c1'
+
   return (
     <li>
-      <p className="text-md border-2 border-red-500 w-fit max-w-[85%] p-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, harum!
+      <p className={
+        `${styles} text-md w-fit max-w-[85%] py-2 px-4 rounded-xl rounded-tl-none shadow-sm`
+      }>
+        {text}
       </p>
     </li>
   )
