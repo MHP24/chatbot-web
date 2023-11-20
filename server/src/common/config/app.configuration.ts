@@ -5,4 +5,5 @@ export const appConfig = () => ({
   defaultFlow: process.env.DEFAULT_FLOW,
   defaultFlowKey: process.env.DEFAULT_FLOW_KEY,
   defaultFlowKeyType: process.env.DEFAULT_FLOW_KEY_TYPE,
+  hasSurvey: Boolean(process.env.HAS_SURVEY),
 });

@@ -26,5 +26,7 @@ export type BotContext = {
   messages: Array<{
     side: ChatSide;
     content: BotMessage | EntryClientMessage;
+    timestamp: number;
+    reference?: string | null;
   }>;
 };

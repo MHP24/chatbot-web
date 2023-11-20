@@ -27,7 +27,6 @@ export type Option = {
 };
 
 export type Input = {
-  isOptional: boolean;
   input: string;
   regex: null | string; // ! Transform to regex when is necessary (use string to store db, json...)
   error_message: string;
@@ -36,4 +35,11 @@ export type Input = {
 
 export type OnInputValid = {
   redirect: string;
+};
+
+export type BotResponse = {
+  data?: {
+    isValidAnswer: boolean;
+  };
+  response: SystemMessage;
 };

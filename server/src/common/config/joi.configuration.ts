@@ -7,4 +7,5 @@ export const JoiValidationSchema = Joi.object({
   DEFAULT_FLOW: Joi.string(),
   DEFAULT_FLOW_KEY: Joi.string(),
   DEFAULT_FLOW_KEY_TYPE: Joi.string(),
+  HAS_SURVEY: Joi.boolean(),
 });

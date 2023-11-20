@@ -4,7 +4,6 @@ export const contact: Record<string, BotMessage> = {
     type: 'input',
     data: {
       input: {
-        isOptional: false,
         input: 'Por favor, a continuación ingresa tu email:',
         regex: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
         error_message: 'Por favor, ingresa un email válido.',
@@ -19,7 +18,6 @@ export const contact: Record<string, BotMessage> = {
     type: 'input',
     data: {
       input: {
-        isOptional: false,
         input: '¿Que información te gustaría recibir?',
         regex: null,
         error_message: 'Por favor, ingresa un asunto válido',
@@ -31,15 +29,22 @@ export const contact: Record<string, BotMessage> = {
   },
 
   send: {
-    type: 'action_with_close',
-    header: '¡Muchas gracias por tu tiempo!',
+    type: 'action',
+    header:
+      '¡Muchas gracias por tu tiempo!\n Tus datos son: Correo electrónico: $0 \nAsunto: $1',
     body: [
       {
         type: 'text',
         text: 'Miguel se pondrá en contacto a la brevedad posible',
       },
-      { type: 'text', text: '¡Adios!' },
+      { type: 'text', text: '¿Necesitas algo más?' },
     ],
+    data: {
+      option: [
+        { label: 'Si', redirect: 'home:start' },
+        { label: 'No', redirect: 'home:exit' },
+      ],
+    },
     action: 'contact',
     parameters_required: 2,
   },
