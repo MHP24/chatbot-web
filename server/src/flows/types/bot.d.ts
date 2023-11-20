@@ -39,7 +39,11 @@ export type OnInputValid = {
 
 export type BotResponse = {
   data?: {
-    isValidAnswer: boolean;
+    isValidAnswer?: boolean;
+  };
+  action?: {
+    type: MessageType;
+    answers: string[];
   };
   response: SystemMessage;
 };

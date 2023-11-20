@@ -26,5 +26,6 @@ export type SystemMessage = {
     option?: Option[];
     input?: Input;
   };
+  timestamp: number;
   hasToClose?: boolean;
 };

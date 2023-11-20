@@ -16,6 +16,7 @@ import { RedisService } from 'src/providers/cache/redis.service';
 import { BotResponse } from '../types';
 import { buildBotContext } from '../helpers';
 import { BotClientResponseAdapter } from 'src/common/adapters';
+import { ActionsService } from './actions/actions.service';
 
 @Injectable()
 export class BotService {
@@ -23,6 +24,7 @@ export class BotService {
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly botClientResponseAdapter: BotClientResponseAdapter,
+    private readonly actionsService: ActionsService,
   ) {}
 
   async handleFlow(clientMessage: ClientMessage): Promise<SystemMessage> {
@@ -35,6 +37,7 @@ export class BotService {
       input: handleInputMessage,
     };
 
+    // const { type: entryType } = clientMessage.message;
     const { sessionId, context, message } = clientMessage;
 
     const { type = `${this.configService.get('DEFAULT_FLOW_KEY_TYPE')}` } =
@@ -45,14 +48,36 @@ export class BotService {
     const { data } = message;
 
     const messageHandling = supportedMessages[type];
+
     if (!messageHandling) return null;
 
-    const botResponse = messageHandling(data, context.bot);
+    const botOutput = messageHandling(data, context.bot);
+
+    const { action } = botOutput;
+
+    const botResponse = action
+      ? this.actionsService.handleNextStep(
+          action.type,
+          botOutput.response,
+          action.answers,
+        )
+      : botOutput.response;
+
+    console.log({ botResponse });
 
     const contextUpdated = buildBotContext({
       clientMessage,
-      botResponse,
+      botResponse: botOutput as BotResponse,
     });
+
+    // if (entryType === 'option' && botResponse.response) {
+    //   // TODO: store in db
+    //   console.log({
+    //     session: clientMessage.sessionId,
+    //     input: message.data,
+    //     tree: botResponse.response,
+    //   });
+    // }
 
     await this.redisService.update<ChatContext>(
       `chat:${sessionId}`,
@@ -61,13 +86,12 @@ export class BotService {
     );
 
     // ! Adapter for client (primitive types, input, option)
-    const adapterForClient = this.botClientResponseAdapter.adapt(
-      botResponse.response,
-    );
+    const adapterForClient = this.botClientResponseAdapter.adapt(botResponse);
 
     return {
       ...(adapterForClient as SystemMessage),
-      hasToClose: botResponse.response.type === 'close',
+      timestamp: clientMessage.timestamp,
+      hasToClose: botResponse.type === 'close',
     };
   }
 }

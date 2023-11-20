@@ -4,7 +4,7 @@ import {
   SystemMessage,
 } from '../../common/types';
 import { MENU } from '../bot/menus/main';
-import { getOptionBySelection, getOptionBySearch, handleNextStep } from '.';
+import { getOptionBySelection, getOptionBySearch } from '.';
 import { BotResponse, Input } from '../types';
 
 export const handleOptionMessage = (
@@ -14,6 +14,7 @@ export const handleOptionMessage = (
   const option = getOptionBySelection(MENU, message);
   if (option) return { response: option };
 
+  console.log(JSON.stringify({ context, message }, null, 2));
   const { data, type } = context.data;
 
   const search = getOptionBySearch(data[type], message);
@@ -48,6 +49,7 @@ export const handleInputMessage = (
   message: string,
   context: BotContext,
 ): BotResponse => {
+  console.log({ context });
   const { data, type } = context.data;
   const validation = data[type] as Input;
 
@@ -87,6 +89,14 @@ export const handleInputMessage = (
     .map(({ content }) => (content as EntryClientMessage).message);
 
   return {
-    response: handleNextStep(nextStep.type, nextStep, [...answers, message]),
+    response: nextStep,
+    action: {
+      type: nextStep.type,
+      answers: [...answers, message],
+    },
   };
+
+  // return {
+  //   response: handleNextStep(nextStep.type, nextStep, [...answers, message]),
+  // };
 };
