@@ -4,7 +4,6 @@ export const contact: Record<string, BotMessage> = {
     type: 'input',
     data: {
       input: {
-        isOptional: false,
         input: 'Por favor, a continuación ingresa tu email:',
         regex: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
         error_message: 'Por favor, ingresa un email válido.',
@@ -19,7 +18,6 @@ export const contact: Record<string, BotMessage> = {
     type: 'input',
     data: {
       input: {
-        isOptional: false,
         input: '¿Que información te gustaría recibir?',
         regex: null,
         error_message: 'Por favor, ingresa un asunto válido',
@@ -31,7 +29,7 @@ export const contact: Record<string, BotMessage> = {
   },
 
   send: {
-    type: 'action_with_close',
+    type: 'action',
     header: '¡Muchas gracias por tu tiempo!',
     body: [
       {

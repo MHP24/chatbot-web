@@ -1,35 +1,37 @@
 import { BotContext, SystemMessage } from '../../common/types';
 import { MENU } from '../bot/menus/main';
 import { getOptionBySelection, getOptionBySearch } from '.';
-import { Input } from '../types';
+import { BotResponse, Input } from '../types';
 
 export const handleOptionMessage = (
   message: string,
   context: BotContext,
-): SystemMessage => {
+): BotResponse => {
   const option = getOptionBySelection(MENU, message);
-  if (option) return option;
+  if (option) return { response: option };
 
   const { data, type } = context.data;
 
   const search = getOptionBySearch(data[type], message);
-  if (search) return getOptionBySelection(MENU, search.redirect);
+  if (search) return { response: getOptionBySelection(MENU, search.redirect) };
 
-  // TODO: env configuration
+  // TODO: env or mock configuration
   return {
-    type: 'option',
-    header: 'No he podido entender tu respuesta',
-    body: [{ type: 'text', text: 'Selecciona una opción válida' }],
-    data: {
-      option: data[type],
-    },
-  } as SystemMessage;
+    response: {
+      type: 'option',
+      header: 'No he podido entender tu respuesta',
+      body: [{ type: 'text', text: 'Selecciona una opción válida' }],
+      data: {
+        option: data[type],
+      },
+    } as SystemMessage,
+  };
 };
 
 export const handleInputMessage = (
   message: string,
   context: BotContext,
-): SystemMessage => {
+): BotResponse => {
   const { data, type } = context.data;
   const validation = data[type] as Input;
 
@@ -44,15 +46,20 @@ export const handleInputMessage = (
       },
     } as SystemMessage;
 
-    return invalidReturn;
+    return {
+      response: invalidReturn,
+      data: {
+        isValidAnswer: false,
+      },
+    };
   }
 
-  // TODO: Search next step and check if it's action
+  // TODO: Search next step and check if it's action to Call action
 
   const nextStep = getOptionBySelection(
     MENU,
     validation.on_input_valid.redirect,
   );
 
-  return nextStep;
+  return { response: nextStep };
 };

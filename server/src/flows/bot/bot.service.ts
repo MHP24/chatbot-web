@@ -3,13 +3,14 @@ import {
   BotContext,
   ChatContext,
   ClientMessage,
-  EntryClientMessage,
   MessageType,
   SystemMessage,
 } from '../../common/types';
 import { handleInputMessage, handleOptionMessage } from '../helpers';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from 'src/providers/cache/redis.service';
+import { BotResponse } from '../types';
+import { buildBotContext } from '../helpers';
 
 @Injectable()
 export class BotService {
@@ -18,21 +19,21 @@ export class BotService {
     private readonly redisService: RedisService,
   ) {}
 
-  async handleFlow({
-    sessionId,
-    message,
-    context,
-  }: ClientMessage): Promise<SystemMessage> {
+  async handleFlow(clientMessage: ClientMessage): Promise<SystemMessage> {
     const supportedMessages: Record<
       string,
-      (message: string, context: BotContext) => SystemMessage
+      (message: string, context: BotContext) => BotResponse
     > = {
       option: handleOptionMessage,
       input: handleInputMessage,
     };
 
+    const { sessionId, context, message } = clientMessage;
+
     const { type = `${this.configService.get('DEFAULT_FLOW_KEY_TYPE')}` } =
       context.bot?.data ?? {};
+
+    clientMessage.message.type = type as MessageType;
 
     const { data } = message;
 
@@ -41,40 +42,17 @@ export class BotService {
 
     const botResponse = messageHandling(data, context.bot);
 
-    if (!context || botResponse) {
-      // TODO: move to helper
+    const contextUpdated = buildBotContext({
+      clientMessage,
+      botResponse,
+    });
 
-      const clientMessage: EntryClientMessage = {
-        type: type as MessageType,
-        message: data,
-      };
+    await this.redisService.update<ChatContext>(
+      `chat:${sessionId}`,
+      'context',
+      contextUpdated,
+    );
 
-      const contextUpdated: ChatContext = {
-        ...context,
-        bot: {
-          currentMenu: data,
-          data: botResponse,
-          messages: [
-            ...(context.bot?.messages ?? []),
-            {
-              side: 'client',
-              content: clientMessage,
-            },
-            {
-              side: 'bot',
-              content: botResponse,
-            },
-          ],
-        },
-      };
-
-      this.redisService.update<ChatContext>(
-        `chat:${sessionId}`,
-        'context',
-        contextUpdated,
-      );
-
-      return botResponse;
-    }
+    return botResponse.response;
   }
 }
