@@ -7,10 +7,10 @@ type Props = {
 }
 
 export const OptionButton: FC<Props> = ({ label, redirect }) => {
-  const { sendOption } = useChat()
+  const { sendOptionMessage } = useChat()
 
   const onClick = () => {
-    sendOption(label, redirect)
+    sendOptionMessage(label, redirect)
   }
 
   return (

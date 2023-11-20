@@ -11,7 +11,7 @@ type Action = {
   type: '[Message] - Receive'
   payload: Message
 } | {
-  type: '[Message] - Add input message'
+  type: '[Message] - Add message'
   payload: string
 }
 
@@ -36,7 +36,7 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
         }]
       }
 
-    case '[Message] - Add input message':
+    case '[Message] - Add message':
       return {
         ...state,
         messages: [

@@ -47,18 +47,24 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
-  const sendMessage = (type: string, message: string) => {
+  const sendInputMessage = (message: string) => {
     emit('message', {
-      type,
+      type: 'input',
       message
+    })
+    dispatch({
+      type: '[Message] - Add message',
+      payload: message
     })
   }
 
-  const sendOption = (label: string, redirect: string) => {
-    console.log({ label, redirect })
-    sendMessage('option', redirect)
+  const sendOptionMessage = (label: string, redirect: string) => {
+    emit('message', {
+      type: 'option',
+      message: redirect
+    })
     dispatch({
-      type: '[Message] - Add input message',
+      type: '[Message] - Add message',
       payload: label
     })
   }
@@ -68,8 +74,8 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
       value={{
         ...state,
         establishConnection,
-        sendMessage,
-        sendOption
+        sendInputMessage,
+        sendOptionMessage
       }}
     >
       {children}
