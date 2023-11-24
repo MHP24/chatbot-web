@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ChatService } from './chat.service';
 import { ChatGateway } from './chat.gateway';
-import { RedisModule } from 'src/providers/cache/redis.module';
-import { CommonModule } from 'src/common/common.module';
+import { ChatService } from './chat.service';
+
 import { ConfigModule } from '@nestjs/config';
-import { FlowModule } from 'src/flows/flow.module';
+import { RedisModule } from '../providers/cache/redis.module';
+
+import { FlowModule } from '../flows/flow.module';
+import { ChatEventsService } from './chat-events.service';
 
 @Module({
-  providers: [ChatGateway, ChatService],
-  imports: [ConfigModule, RedisModule, CommonModule, FlowModule],
+  providers: [ChatGateway, ChatService, ChatEventsService],
+  imports: [ConfigModule, RedisModule, FlowModule],
 })
 export class ChatModule {}
