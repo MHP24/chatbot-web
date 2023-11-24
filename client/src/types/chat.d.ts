@@ -3,8 +3,9 @@ import { type Message } from '.'
 export type Flow = 'bot' | 'agent' | 'survey'
 
 export type Chat = {
+  isClosed: boolean
   isOnline: boolean
-  sessionId?: string
+  chatId?: string
   flow?: Flow
   messages: Message[]
 }

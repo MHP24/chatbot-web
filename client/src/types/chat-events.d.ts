@@ -3,7 +3,7 @@ import { type Flow } from './chat'
 
 /* Listeners */
 export type OnSession = {
-  sessionId: string
+  chatId: string
   flow: Flow
 }
 

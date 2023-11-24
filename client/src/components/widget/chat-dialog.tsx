@@ -18,7 +18,7 @@ export const ChatDialog = () => {
 
   return (
     <main className="h-full bg-c2 overflow-y-auto py-6" ref={messagesRef}>
-      <MessagesContainer/>
+      <MessagesContainer />
     </main>
   )
 }

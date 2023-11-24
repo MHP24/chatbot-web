@@ -13,6 +13,9 @@ type Action = {
 } | {
   type: '[Message] - Add message'
   payload: string
+} | {
+  type: '[Chat] - Close'
+  payload: ChatState
 }
 
 export const chatReducer = (state: ChatState, action: Action): ChatState => {
@@ -23,8 +26,9 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
     case '[Session] - Start session':
       return {
         ...state,
-        sessionId: action.payload.sessionId,
-        flow: action.payload.flow
+        chatId: action.payload.chatId,
+        flow: action.payload.flow,
+        isClosed: false
       }
 
     case '[Message] - Receive':
@@ -52,6 +56,11 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
             timestamp: Number(new Date())
           }
         ]
+      }
+    case '[Chat] - Close':
+      return {
+        ...state,
+        ...action.payload
       }
     default:
       return state

@@ -2,19 +2,20 @@ import { useReducer, type FC, type PropsWithChildren, useEffect } from 'react'
 import { ChatContext, chatReducer } from '.'
 import { type ChatState } from '../../types/chat'
 import { useSocket } from '../../hooks'
-import { type OnMessage, type OnSession } from '../../types'
+import { type OnClose, type OnMessage, type OnSession } from '../../types'
 import { v4 as uuid } from 'uuid' // TODO: Change this..
 
 const INITIAL_STATE: ChatState = {
+  isClosed: true,
   isOnline: false,
-  sessionId: undefined,
+  chatId: undefined,
   flow: undefined,
   messages: []
 }
 
 export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE)
-  const { session, connect, on, emit } = useSocket()
+  const { session, connect, disconnect, on, emit } = useSocket()
 
   useEffect(() => {
     dispatch({
@@ -25,11 +26,14 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     if (session.isOnline) {
       on<OnSession>('session', startSession)
       on<OnMessage>('message', receiveMessage)
+      on<OnClose>('close', closeChat)
     }
   }, [session])
 
   const establishConnection = () => {
-    !state.isOnline && connect(uuid())
+    if (!state.isOnline && state.isClosed) {
+      connect(uuid())
+    }
   }
 
   const startSession = (sessionContext: OnSession) => {
@@ -66,6 +70,17 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({
       type: '[Message] - Add message',
       payload: label
+    })
+  }
+
+  const closeChat = () => {
+    disconnect()
+    dispatch({
+      type: '[Chat] - Close',
+      payload: {
+        ...INITIAL_STATE,
+        isClosed: true
+      }
     })
   }
 
