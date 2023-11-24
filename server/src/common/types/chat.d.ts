@@ -6,7 +6,6 @@ export type ChatSide = 'client' | 'bot' | 'agent';
 export type Chat = {
   chatId: string;
   startedAt: number;
-  lastUserInteraction: number;
   context: ChatContext;
 };
 

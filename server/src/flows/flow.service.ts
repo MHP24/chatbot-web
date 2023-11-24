@@ -1,13 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { BotService } from './bot/bot.service';
-import {
-  Chat,
-  ClientMessage,
-  EntryClientMessage,
-  SystemMessage,
-} from '../common';
-import { RedisService } from 'src/providers/cache/redis.service';
 import { ConfigService } from '@nestjs/config';
+import { BotContext, FlowEntry } from './types';
+import { Chat, EntryClientMessage, SystemMessage } from '../common';
+import { RedisService } from '../providers/cache/redis.service';
+import { BotService } from './bot/bot.service';
 
 @Injectable()
 export class FlowService {
@@ -15,7 +11,7 @@ export class FlowService {
 
   private flows: Record<
     string,
-    (message: ClientMessage) => Promise<SystemMessage | null>
+    (data: FlowEntry<void>) => Promise<SystemMessage | null>
   >;
 
   constructor(
@@ -24,36 +20,44 @@ export class FlowService {
     private readonly botService: BotService,
   ) {
     this.flows = {
-      // bot: this.handleBotFlow.bind(this),
+      bot: this.handleBotFlow.bind(this),
     };
   }
 
-  async handleFlow(chatId: string, data: EntryClientMessage | null) {
-    if (!data && chatId) {
-      await this.joinToFlow(chatId);
+  async handleFlow(chatId: string, message: EntryClientMessage | null) {
+    const chat =
+      (await this.redisService.get<Chat>(`chat:${chatId}`)) ??
+      (await this.joinToFlow(chatId));
+
+    const { currentFlow } = chat.context;
+
+    const flowExecution = this.flows[currentFlow];
+    if (!flowExecution) {
+      throw new Error(`Flow not supported: ${currentFlow}`);
     }
-    console.log({ chatId, data });
-    // const chat = await this.redisService.get<Chat>(`chat:${sessionId}`);
-    // const {
-    //   context: { currentFlow },
-    // } = clientMessage;
 
-    // const flowExecution = this.flows[currentFlow];
-    // if (!flowExecution) {
-    //   throw new Error(`Flow not supported: ${currentFlow}`);
-    // }
-
-    // return await flowExecution(clientMessage);
+    await flowExecution({
+      chatId,
+      message,
+      context: chat.context[currentFlow],
+    });
   }
 
-  async joinToFlow(chatId: string) {
-    try {
-      const timestamp = Number(new Date());
+  private async handleBotFlow(
+    data: FlowEntry<BotContext>,
+  ): Promise<SystemMessage | null> {
+    return this.botService.handleFlow(data);
+  }
 
-      const chatInitialContext = {
+  /*
+   * Add chat/user to the chat tmp db and starts conversation
+   * using the default data managed by the default flow
+   */
+  async joinToFlow(chatId: string): Promise<Chat> {
+    try {
+      const chatInitialContext: Chat = {
         chatId,
-        lastUserInteraction: timestamp,
-        startedAt: timestamp,
+        startedAt: Number(new Date()),
         context: {
           currentFlow: this.configService.get('DEFAULT_FLOW'),
         },
@@ -67,10 +71,4 @@ export class FlowService {
       this.logger.error(error);
     }
   }
-
-  // private async handleBotFlow(
-  //   message: ClientMessage,
-  // ): Promise<SystemMessage | null> {
-  //   return this.botService.handleFlow(message);
-  // }
 }
