@@ -12,14 +12,17 @@ export type BotContext = {
     value: unknown;
   }>;
   currentMenu: BotMenu<Option | Input>;
+  // * Text messages (origin: input) from the user
   messages: Array<{
     content: string;
     timestamp: number;
   }>;
+  // * Options or menus (origin: option) from the user
   nodes: Array<{
     reference: string;
     timestamp: number;
   }>;
+  // * (origin: input, option) from the user and bot responses
   history: Array<{
     side: ChatSide;
     content: BotMenu<Menu> | ClientMessage;

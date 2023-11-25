@@ -27,8 +27,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       .subscribe((args) => this.emitSession(args));
   }
 
+  // * Listeners
   async handleConnection(client: Socket) {
-    const chatId = (client.handshake.headers.authentication as string) ?? '';
+    const chatId = client.handshake.headers.authentication as string;
     this.logger.log('New connection');
     return await this.chatService.onConnect(client, chatId);
   }
