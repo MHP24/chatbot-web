@@ -46,8 +46,11 @@ export class FlowService {
 
     flowResponse.type === 'bot-message' &&
       this.eventsService.emitMessageEvent({
-        ...flowResponse.response,
-        timestamp: flowResponse.timestamp,
+        chatId,
+        message: {
+          ...flowResponse.response,
+          timestamp: flowResponse.timestamp,
+        },
       });
   }
 

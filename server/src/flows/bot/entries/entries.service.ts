@@ -11,7 +11,6 @@ export class EntriesService implements BotHandler {
   ) {}
 
   handler(context: FlowEntry<BotContext>): BotMenu<Menu> {
-    console.log({ context });
     this.inputService.handleInput();
     this.optionService.handleOption();
     return null;

@@ -7,4 +7,7 @@ export type OnSession = {
   flow: Flow;
 };
 
-export type OnMessage = SystemMessage;
+export type OnMessage = {
+  chatId: string;
+  message: SystemMessage;
+};

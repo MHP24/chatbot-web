@@ -27,12 +27,12 @@ export class ChatService {
       return;
     }
 
-    await this.flowService.handleFlow(conversationId, null);
-
     this.eventsService.emitSessionEvent({
       client,
       chatId,
       flow: this.configService.get('DEFAULT_FLOW'),
     });
+
+    await this.flowService.handleFlow(conversationId, null);
   }
 }
