@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   BotContext,
   BotMenu,
@@ -7,24 +8,25 @@ import {
   Input,
   Option,
 } from '../types';
-import { EntryClientMessage } from 'src/common';
-import { ConfigService } from '@nestjs/config';
+import { Chat, ChatSide, EntryClientMessage } from 'src/common';
 import { getMenuBySelection } from '../helpers';
 import { mainMenu } from './menus/main';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { EntriesService } from './entries/entries.service';
+import { OutputsService } from './outputs/outputs.service';
 
 @Injectable()
 export class BotService {
-  // TODO: Inject handleEntry, handleOutput
   constructor(
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly entriesService: EntriesService,
+    private readonly outputsService: OutputsService,
   ) {}
 
   async handleFlow(data: FlowEntry<BotContext>): Promise<FlowResponse> {
-    const { chatId, context } = data;
+    const { chatId, message, context } = data;
+    const { origin, message: clientMessage } = message ?? {};
     const clientTimestamp = Number(new Date());
 
     // * On new message starting this flow
@@ -85,7 +87,73 @@ export class BotService {
     }
 
     // * On next messages already having a context
-    const flowResponse = this.entriesService.handler(data);
-    console.log(JSON.stringify({ flowResponse }, null, 2));
+    const inputHandling = await this.entriesService.handler(data);
+
+    const outputHandling = await this.outputsService.handler({
+      chatId,
+      menu: inputHandling,
+    });
+
+    const nextMenu = (outputHandling ?? inputHandling) as BotMenu<
+      Input | Option
+    >;
+
+    /*
+     * latest content is required in case one of the handlers changed the context
+     * adding variables, handling menu, messages, etc
+     */
+    const {
+      context: { bot },
+    } = await this.redisService.get<Chat>(`chat:${chatId}`);
+
+    /*
+     * Update using the latest content
+     */
+    const nextContext = {
+      ...bot,
+      currentMenu: nextMenu,
+      nodes: [...bot.nodes],
+      history: [
+        ...bot.history,
+        {
+          side: 'client' as ChatSide,
+          content: {
+            origin,
+            message: clientMessage,
+          },
+          timestamp: clientTimestamp,
+        },
+        {
+          side: 'bot' as ChatSide,
+          content: nextMenu,
+          timestamp: Number(new Date()),
+        },
+      ],
+      messages: [...bot.messages],
+    };
+
+    origin === 'option' &&
+      nextContext.nodes.push({
+        reference: clientMessage,
+        timestamp: clientTimestamp,
+      });
+
+    origin === 'input' &&
+      nextContext.messages.push({
+        content: clientMessage,
+        timestamp: clientTimestamp,
+      });
+
+    await this.redisService.update<BotContext>(
+      `chat:${chatId}`,
+      'context.bot',
+      nextContext,
+    );
+
+    return {
+      type: 'bot-message',
+      response: nextMenu,
+      timestamp: +new Date(),
+    };
   }
 }

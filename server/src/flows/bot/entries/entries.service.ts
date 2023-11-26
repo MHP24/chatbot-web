@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { BotHandler } from '../interfaces';
+import { BotEntryHandler } from '../interfaces';
 import { FlowEntry, BotContext, Menu, BotMenu } from 'src/flows/types';
 import { InputService, OptionService } from './handlers';
 
 @Injectable()
-export class EntriesService implements BotHandler {
+export class EntriesService implements BotEntryHandler {
   private handlers: Record<
     string,
     (data: FlowEntry<BotContext>) => BotMenu<Menu> | Promise<BotMenu<Menu>>
@@ -26,7 +26,7 @@ export class EntriesService implements BotHandler {
     return typeHandler(data);
   }
 
-  handleOption(data: FlowEntry<BotContext>) {
+  private handleOption(data: FlowEntry<BotContext>) {
     return this.optionService.handleOption(data);
   }
 }
