@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Socket } from 'socket.io';
-import { ChatEventsService } from './chat-events.service';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { Chat } from '../common';
 import { FlowService } from 'src/flows/flow.service';
+import { EventsService } from './events';
 
 @Injectable()
 export class ChatService {
@@ -13,7 +13,7 @@ export class ChatService {
   constructor(
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
-    private readonly chatEventsService: ChatEventsService,
+    private readonly eventsService: EventsService,
     private readonly flowService: FlowService,
   ) {}
 
@@ -29,7 +29,7 @@ export class ChatService {
 
     await this.flowService.handleFlow(conversationId, null);
 
-    this.chatEventsService.emitSessionEvent({
+    this.eventsService.emitSessionEvent({
       client,
       chatId,
       flow: this.configService.get('DEFAULT_FLOW'),

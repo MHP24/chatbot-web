@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Subject } from 'rxjs';
-import { OnSession, OnMessage } from './types';
+import { OnSession, OnMessage } from '../types';
 
 @Injectable()
-export class ChatEventsService {
+export class EventsService {
   private sessionSubject = new Subject<OnSession>();
   private messageSubject = new Subject<OnMessage>();
 

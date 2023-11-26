@@ -7,8 +7,8 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-import { ChatEventsService } from './chat-events.service';
-import { OnSession } from './types';
+import { EventsService } from './events';
+import { OnMessage, OnSession } from './types';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -19,12 +19,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(
     private readonly chatService: ChatService,
-    private readonly chatEventsService: ChatEventsService,
+    private readonly eventsService: EventsService,
   ) {
     // * On new session confirm
-    this.chatEventsService
+    this.eventsService
       .onSessionEvent()
       .subscribe((args) => this.emitSession(args));
+
+    this.eventsService
+      .onMessageEvent()
+      .subscribe((args) => this.emitMessage(args));
   }
 
   // * Listeners
@@ -52,5 +56,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       chatId,
       flow,
     });
+  }
+
+  emitMessage(args: OnMessage) {
+    console.log({ args });
   }
 }

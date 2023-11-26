@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BotContext, FlowEntry } from './types';
-import { Chat, EntryClientMessage, SystemMessage } from '../common';
+import { BotContext, FlowEntry, FlowResponse } from './types';
+import { Chat, EntryClientMessage } from '../common';
 import { RedisService } from '../providers/cache/redis.service';
 import { BotService } from './bot/bot.service';
+import { EventsService } from '../chat/events';
 
 @Injectable()
 export class FlowService {
@@ -11,13 +12,14 @@ export class FlowService {
 
   private flows: Record<
     string,
-    (data: FlowEntry<void>) => Promise<SystemMessage | null>
+    (data: FlowEntry<void>) => Promise<FlowResponse | null>
   >;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly botService: BotService,
+    private readonly eventsService: EventsService,
   ) {
     this.flows = {
       bot: this.handleBotFlow.bind(this),
@@ -36,16 +38,22 @@ export class FlowService {
       throw new Error(`Flow not supported: ${currentFlow}`);
     }
 
-    await flowExecution({
+    const flowResponse = await flowExecution({
       chatId,
       message,
       context: chat.context[currentFlow],
     });
+
+    flowResponse.type === 'bot-message' &&
+      this.eventsService.emitMessageEvent({
+        ...flowResponse.response,
+        timestamp: flowResponse.timestamp,
+      });
   }
 
   private async handleBotFlow(
     data: FlowEntry<BotContext>,
-  ): Promise<SystemMessage | null> {
+  ): Promise<FlowResponse> {
     return this.botService.handleFlow(data);
   }
 

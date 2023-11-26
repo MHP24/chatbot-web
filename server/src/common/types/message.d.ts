@@ -1,4 +1,4 @@
-import { BotBodyMessage, Option } from '../../flows';
+import { BotMenu, Input, Option } from '../../flows/types';
 import { ChatContext } from '.';
 
 export type MessageOrigin = 'input' | 'option';
@@ -19,9 +19,5 @@ export type ClientMessage = {
 };
 
 export type SystemMessage = {
-  type: MessageOrigin;
-  header?: string;
-  body?: Array<BotBodyMessage>;
-  data?: Option;
   timestamp: number;
-};
+} & BotMenu<Input | Option>;
