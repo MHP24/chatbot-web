@@ -3,12 +3,14 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   WebSocketServer,
+  SubscribeMessage,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { EventsService } from './events';
 import { OnMessage, OnSession } from './types';
+import { EntryClientMessage } from 'src/common';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -42,11 +44,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.logger.log(`Disconnected ${client.id}`);
   }
 
-  // @SubscribeMessage('message')
-  // onMessage(client: Socket, payload: EntryClientMessage) {
-  //   const sessionId = client.handshake.headers.authentication as string;
-  //   this.chatService.onMessage(this.wss, sessionId, payload);
-  // }
+  @SubscribeMessage('message')
+  async onMessage(client: Socket, payload: EntryClientMessage) {
+    const chatId = client.handshake.headers.authentication as string;
+    return await this.chatService.onMessage(chatId, payload);
+  }
 
   // * Emitters
   emitSession(args: OnSession) {

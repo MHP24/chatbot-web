@@ -24,7 +24,7 @@ export class BotService {
   ) {}
 
   async handleFlow(data: FlowEntry<BotContext>): Promise<FlowResponse> {
-    const { chatId, message, context } = data;
+    const { chatId, context } = data;
     const clientTimestamp = Number(new Date());
 
     // * On new message starting this flow
@@ -77,8 +77,6 @@ export class BotService {
         botContext,
       );
 
-      this.entriesService.handler(data);
-
       return {
         type: 'bot-message',
         response: selection,
@@ -87,6 +85,7 @@ export class BotService {
     }
 
     // * On next messages already having a context
-    console.log({ message });
+    const flowResponse = this.entriesService.handler(data);
+    console.log(JSON.stringify({ flowResponse }, null, 2));
   }
 }

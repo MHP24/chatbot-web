@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Socket } from 'socket.io';
 import { RedisService } from 'src/providers/cache/redis.service';
-import { Chat } from '../common';
+import { Chat, EntryClientMessage } from '../common';
 import { FlowService } from 'src/flows/flow.service';
 import { EventsService } from './events';
 
@@ -34,5 +34,9 @@ export class ChatService {
     });
 
     await this.flowService.handleFlow(conversationId, null);
+  }
+
+  async onMessage(chatId: string, message: EntryClientMessage) {
+    await this.flowService.handleFlow(chatId, message);
   }
 }
