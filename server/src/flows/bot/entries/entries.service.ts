@@ -16,6 +16,7 @@ export class EntriesService implements BotEntryHandler {
   ) {
     this.handlers = {
       option: this.handleOption.bind(this),
+      input: this.handleInput.bind(this),
     };
   }
 
@@ -28,5 +29,9 @@ export class EntriesService implements BotEntryHandler {
 
   private handleOption(data: FlowEntry<BotContext>) {
     return this.optionService.handleOption(data);
+  }
+
+  private handleInput(data: FlowEntry<BotContext>) {
+    return this.inputService.handleInput(data);
   }
 }

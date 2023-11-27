@@ -4,6 +4,6 @@ import { BotOutputData } from 'src/flows/types';
 @Injectable()
 export class ActionService {
   handleAction(data: BotOutputData) {
-    console.log({ data });
+    console.log({ actionData: data });
   }
 }
