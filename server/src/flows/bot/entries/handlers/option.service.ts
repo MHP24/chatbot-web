@@ -22,7 +22,7 @@ export class OptionService {
     );
 
     if (selectionBySearch) {
-      return this.getMenuBySelection(currentMenu, selectionBySearch.redirect);
+      return this.getMenuBySelection(mainMenu, selectionBySearch.redirect);
     }
 
     return {

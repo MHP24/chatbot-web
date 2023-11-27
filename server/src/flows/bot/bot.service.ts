@@ -8,10 +8,10 @@ import {
   Input,
   Option,
 } from '../types';
-import { Chat, EntryClientMessage } from 'src/common';
+import { Chat, EntryClientMessage } from '../../common';
 import { buildContext, getMenuBySelection } from '../helpers';
 import { mainMenu } from './menus/main';
-import { RedisService } from 'src/providers/cache/redis.service';
+import { RedisService } from '../../providers/cache/redis.service';
 import { EntriesService } from './entries/entries.service';
 import { OutputsService } from './outputs/outputs.service';
 
@@ -41,10 +41,11 @@ export class BotService {
         defaultMessage.message,
       ) as BotMenu<Input | Option>;
 
-      /*
-       * Eval if the selection must to be handled by handleOutputs
-       */
-      // TODO: Eval and adapt and use this instead selection and use this to return
+      // * Eval if the selection must to be handled by handleOutputs
+      const outputHandling = await this.outputsService.handler({
+        chatId,
+        menu: selection,
+      });
 
       await this.redisService.update(
         `chat:${chatId}`,
@@ -52,7 +53,7 @@ export class BotService {
         buildContext(
           context,
           defaultMessage,
-          selection,
+          outputHandling ?? selection,
           clientTimestamp,
           +new Date(),
         ),
