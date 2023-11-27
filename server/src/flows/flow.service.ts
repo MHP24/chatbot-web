@@ -46,7 +46,7 @@ export class FlowService {
 
     // TODO: tmp emitter
     flowResponse &&
-      flowResponse.type === 'bot-message' &&
+      flowResponse.type === 'message' &&
       this.eventsService.emitMessageEvent({
         chatId,
         message: {

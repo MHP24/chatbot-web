@@ -18,8 +18,8 @@ export type FlowTransferResponse = {
   destination: string;
 };
 
-export type FlowBotMessageResponse = {
-  type: 'bot-message';
+export type FlowMessageResponse = {
+  type: 'message';
   response: BotMenu<Input | Option>;
 };
 

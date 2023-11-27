@@ -60,7 +60,7 @@ export class BotService {
       );
 
       return {
-        type: 'bot-message',
+        type: 'message',
         response: selection,
         timestamp: +new Date(),
       };
@@ -97,7 +97,7 @@ export class BotService {
     );
 
     return {
-      type: 'bot-message',
+      type: 'message',
       response: nextMenu,
       timestamp: +new Date(),
     };

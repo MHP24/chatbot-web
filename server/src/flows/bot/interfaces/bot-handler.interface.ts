@@ -1,7 +1,7 @@
 import {
   BotContext,
   BotMenu,
-  BotOutputData,
+  BotDataResponse,
   FlowEntry,
   Input,
   Menu,
@@ -16,6 +16,6 @@ export interface BotEntryHandler {
 
 export interface BotOutputHandler {
   handler: (
-    data: BotOutputData,
+    data: BotDataResponse,
   ) => BotMenu<Input | Option> | Promise<BotMenu<Input | Option>>;
 }
