@@ -52,7 +52,7 @@ export class ActionService {
     const { variables } = context;
     const email = getVariable('mail-contact', variables);
     const subject = getVariable('subject-contact', variables);
-    // TODO: add contact fn
+    // TODO: add contact fn => mailer
     return {
       type: 'option',
       header: `Perfecto, Miguel se comunicará contigo al correo ${email} con el asunto de: ${subject}`,
@@ -70,7 +70,7 @@ export class ActionService {
           },
           {
             label: 'No',
-            redirect: 'home:exti',
+            redirect: 'home:exit',
           },
         ],
       },

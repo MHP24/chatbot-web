@@ -42,7 +42,7 @@ export class BotService {
       ) as BotMenu<Input | Option>;
 
       // * Eval if the selection must to be handled by handleOutputs
-      const outputHandling = await this.outputsService.handler({
+      const { type, response, timestamp } = await this.outputsService.handler({
         chatId,
         menu: selection,
       });
@@ -53,16 +53,16 @@ export class BotService {
         buildContext(
           context,
           defaultMessage,
-          outputHandling ?? selection,
+          response,
           clientTimestamp,
-          +new Date(),
+          timestamp,
         ),
       );
 
       return {
-        type: 'message',
-        response: selection,
-        timestamp: +new Date(),
+        type,
+        response,
+        timestamp,
       };
     }
 
@@ -70,16 +70,16 @@ export class BotService {
 
     // * Handling from context
     const inputHandling = await this.entriesService.handler(data);
+    console.log({ inputHandling });
 
     // * Check if have to do something, (not in option, input)
-    const outputHandling = await this.outputsService.handler({
+    const { type, response, timestamp } = await this.outputsService.handler({
       chatId,
       menu: inputHandling,
     });
+    console.log({ type, response });
 
-    const nextMenu = (outputHandling ?? inputHandling) as BotMenu<
-      Input | Option
-    >;
+    const nextMenu = response as BotMenu<Input | Option>;
 
     /*
      * latest context is required in case one of the handlers changed the context
@@ -93,13 +93,13 @@ export class BotService {
     await this.redisService.update<BotContext>(
       `chat:${chatId}`,
       'context.bot',
-      buildContext(bot, message, nextMenu, clientTimestamp, +new Date()),
+      buildContext(bot, message, nextMenu, clientTimestamp, timestamp),
     );
 
     return {
-      type: 'message',
+      type,
       response: nextMenu,
-      timestamp: +new Date(),
+      timestamp,
     };
   }
 }

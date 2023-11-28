@@ -3,9 +3,8 @@ import {
   BotMenu,
   BotDataResponse,
   FlowEntry,
-  Input,
   Menu,
-  Option,
+  FlowResponse,
 } from 'src/flows/types';
 
 export interface BotEntryHandler {
@@ -15,7 +14,5 @@ export interface BotEntryHandler {
 }
 
 export interface BotOutputHandler {
-  handler: (
-    data: BotDataResponse,
-  ) => BotMenu<Input | Option> | Promise<BotMenu<Input | Option>>;
+  handler: (data: BotDataResponse) => Promise<FlowResponse>;
 }

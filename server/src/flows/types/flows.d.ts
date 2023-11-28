@@ -9,20 +9,21 @@ export type FlowEntry<T> = {
 
 export type FlowCloseResponse = {
   type: 'close';
-  hasToClose: boolean;
-};
-
-export type FlowTransferResponse = {
-  type: 'transfer';
-  hasToTransfer: boolean;
-  destination: string;
+  response: BotMenu<Input | Option>;
+  timestamp: number;
 };
 
 export type FlowMessageResponse = {
   type: 'message';
   response: BotMenu<Input | Option>;
+  timestamp: number;
 };
 
-export type FlowResponse = {
-  timestamp: number;
-} & (FlowCloseResponse | FlowTransferResponse | FlowBotMessageResponse);
+// export type FlowTransferResponse = {
+//   type: 'transfer';
+//   hasToTransfer: boolean;
+//   destination: string;
+// };
+
+export type FlowResponse = FlowCloseResponse | FlowMessageResponse;
+// | FlowTransferResponse
