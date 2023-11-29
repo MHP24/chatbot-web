@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FlowEntry, BotContext, BotMenu, Menu, Input } from '../../../types';
 import { mainMenu } from '../../menus/main';
 import { RedisService } from 'src/providers/cache/redis.service';
+import { deleteVariable } from 'src/flows/helpers';
 
 @Injectable()
 export class InputService {
@@ -33,7 +34,8 @@ export class InputService {
       {
         ...contextData.context,
         variables: [
-          ...contextData.context.variables,
+          // * Replace old variable with the same reference
+          ...deleteVariable(input.reference, contextData.context.variables),
           {
             reference: input.reference,
             value: message,
