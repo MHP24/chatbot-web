@@ -3,8 +3,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JoiValidationSchema, appConfig } from './common/config';
 
-// Cache setup
+// Database providers
 import { RedisModule } from './providers/cache/redis.module';
+import { PrismaModule } from './providers/prisma/prisma.module';
 
 // Gateway (WebSocket)
 import { ChatModule } from './chat/chat.module';
@@ -20,6 +21,7 @@ import { CommonModule } from './common/common.module';
       validationSchema: JoiValidationSchema,
     }),
     RedisModule,
+    PrismaModule,
     ChatModule,
     BotModule,
     CommonModule,

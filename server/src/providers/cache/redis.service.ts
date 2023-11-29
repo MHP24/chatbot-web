@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { createClient } from 'redis';
 
 @Injectable()
@@ -6,7 +7,7 @@ export class RedisService {
   private readonly logger = new Logger('RedisService');
   private redisClient;
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     /* Connection instance with redis 
       running from Docker container 
     */
@@ -22,15 +23,37 @@ export class RedisService {
   }
 
   async get<T>(key: string): Promise<T | undefined> {
-    const result = await this.redisClient.json.get(key);
-    return result;
+    try {
+      return await this.redisClient.json.get(
+        `${this.configService.get('CHAT_ID')}:${key}`,
+      );
+    } catch (error) {
+      this.logger.error(`GET: ${error}`);
+      return undefined;
+    }
   }
 
   async set<T>(key: string, value: T) {
-    return await this.redisClient.json.set(key, '.', value);
+    try {
+      return await this.redisClient.json.set(
+        `${this.configService.get('CHAT_ID')}:${key}`,
+        '.',
+        value,
+      );
+    } catch (error) {
+      this.logger.error(`SET: ${error}`);
+    }
   }
 
   async update<T>(key: string, prop: string, value: T) {
-    return await this.redisClient.json.set(key, `.${prop}`, value);
+    try {
+      return await this.redisClient.json.set(
+        `${this.configService.get('CHAT_ID')}:${key}`,
+        `.${prop}`,
+        value,
+      );
+    } catch (error) {
+      this.logger.error(`UPDATE: ${error}`);
+    }
   }
 }
