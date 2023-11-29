@@ -70,14 +70,12 @@ export class BotService {
 
     // * Handling from context
     const inputHandling = await this.entriesService.handler(data);
-    console.log({ inputHandling });
 
     // * Check if have to do something, (not in option, input)
     const { type, response, timestamp } = await this.outputsService.handler({
       chatId,
       menu: inputHandling,
     });
-    console.log({ type, response });
 
     const nextMenu = response as BotMenu<Input | Option>;
 

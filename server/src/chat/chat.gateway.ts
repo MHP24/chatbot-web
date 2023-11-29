@@ -9,7 +9,7 @@ import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { EventsService } from './events';
-import { OnMessage, OnSession } from './types';
+import { OnClose, OnMessage, OnSession } from './types';
 import { EntryClientMessage } from 'src/common';
 
 @WebSocketGateway({ cors: true })
@@ -28,9 +28,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       .onSessionEvent()
       .subscribe((args) => this.emitSession(args));
 
+    // * On new message from flow
     this.eventsService
       .onMessageEvent()
       .subscribe((args) => this.emitMessage(args));
+
+    // * On close
+    this.eventsService.onCloseEvent().subscribe((args) => this.emitClose(args));
   }
 
   // * Listeners
@@ -63,5 +67,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   emitMessage(args: OnMessage) {
     const { chatId, message } = args;
     return this.wss.to(chatId).emit('message', { message });
+  }
+
+  emitClose(args: OnClose) {
+    const { chatId, message = undefined } = args;
+    return this.wss.to(chatId).emit('close', { message });
   }
 }

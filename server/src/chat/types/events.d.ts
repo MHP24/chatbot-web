@@ -11,3 +11,8 @@ export type OnMessage = {
   chatId: string;
   message: SystemMessage;
 };
+
+export type OnClose = {
+  chatId: string;
+  message?: SystemMessage;
+};

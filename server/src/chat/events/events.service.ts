@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Subject } from 'rxjs';
-import { OnSession, OnMessage } from '../types';
+import { OnSession, OnMessage, OnClose } from '../types';
 
 @Injectable()
 export class EventsService {
   private sessionSubject = new Subject<OnSession>();
   private messageSubject = new Subject<OnMessage>();
+  private closeSubject = new Subject<OnClose>();
 
   // * Listeners
   onSessionEvent() {
@@ -14,6 +15,10 @@ export class EventsService {
 
   onMessageEvent() {
     return this.messageSubject.asObservable();
+  }
+
+  onCloseEvent() {
+    return this.closeSubject.asObservable();
   }
 
   // * Emitters
@@ -25,5 +30,7 @@ export class EventsService {
     this.messageSubject.next(args);
   }
 
-  // TODO: Add close
+  emitCloseEvent(args: OnClose) {
+    this.closeSubject.next(args);
+  }
 }

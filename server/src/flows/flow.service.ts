@@ -44,16 +44,28 @@ export class FlowService {
       context: chat.context[currentFlow],
     });
 
-    // TODO: tmp emitter
-    flowResponse &&
+    // * When the flow has response...
+    if (flowResponse) {
+      //* On messages from flow
       flowResponse.type === 'message' &&
-      this.eventsService.emitMessageEvent({
-        chatId,
-        message: {
-          ...flowResponse.response,
-          timestamp: flowResponse.timestamp,
-        },
-      });
+        this.eventsService.emitMessageEvent({
+          chatId,
+          message: {
+            ...flowResponse.response,
+            timestamp: flowResponse.timestamp,
+          },
+        });
+
+      // * On close
+      flowResponse.type === 'close' &&
+        this.eventsService.emitCloseEvent({
+          chatId,
+          message: {
+            ...flowResponse.response,
+            timestamp: flowResponse.timestamp,
+          },
+        });
+    }
   }
 
   private async handleBotFlow(
