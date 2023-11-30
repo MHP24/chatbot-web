@@ -28,5 +28,5 @@ export type OnClose = {
 
 /* Emitters */
 export type EmitMessage = {
-  message: string
+  message?: Message
 }

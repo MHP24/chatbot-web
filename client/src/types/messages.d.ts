@@ -31,6 +31,4 @@ export type Message = {
     input?: Input
   }
   timestamp: number
-  // Interactions
-  hasToClose?: boolean
 }

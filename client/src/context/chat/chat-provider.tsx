@@ -15,7 +15,7 @@ const INITIAL_STATE: ChatState = {
 
 export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE)
-  const { session, connect, disconnect, on, emit } = useSocket()
+  const { session, connect, disconnect, on, emit } = useSocket(import.meta.env.VITE_SERVER_URL)
 
   useEffect(() => {
     dispatch({
@@ -53,7 +53,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const sendInputMessage = (message: string) => {
     emit('message', {
-      type: 'input',
+      origin: 'input',
       message
     })
     dispatch({
@@ -64,7 +64,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const sendOptionMessage = (label: string, redirect: string) => {
     emit('message', {
-      type: 'option',
+      origin: 'option',
       message: redirect
     })
     dispatch({
