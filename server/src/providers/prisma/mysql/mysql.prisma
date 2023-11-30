@@ -12,7 +12,8 @@ model Chat {
   id    Int     @id @default(autoincrement()) @map("id")
   chatInstance String @map("chat_instance")
   chatId String  @unique @map("chat_id")
-  data Json @map("data")
+  conversation Json? @map("conversation")
+  status Int @default(1) @map("status") // 1: start,  2: left,  3: finish
   startDate  DateTime @default(now()) @map("start_date")
   endDate  DateTime? @map("end_date")
   @@map("chats")

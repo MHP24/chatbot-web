@@ -44,6 +44,7 @@ export class FlowService {
       context: chat.context[currentFlow],
     });
 
+    //TODO: Refactor
     // * When the flow has response...
     if (flowResponse) {
       //* On messages from flow

@@ -5,7 +5,6 @@ import {
   WebSocketServer,
   SubscribeMessage,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { EventsService } from './events';
@@ -16,8 +15,6 @@ import { EntryClientMessage } from 'src/common';
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   wss: Server;
-
-  private logger = new Logger('ChatGateway');
 
   constructor(
     private readonly chatService: ChatService,
@@ -40,12 +37,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // * Listeners
   async handleConnection(client: Socket) {
     const chatId = client.handshake.headers.authentication as string;
-    this.logger.log('New connection');
     return await this.chatService.onConnect(client, chatId);
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Disconnected ${client.id}`);
+    const chatId = client.handshake.headers.authentication as string;
+    this.chatService.onDisconnect(chatId);
   }
 
   @SubscribeMessage('message')
@@ -71,6 +68,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   emitClose(args: OnClose) {
     const { chatId, message = undefined } = args;
+    // TODO: handleClose
     return this.wss.to(chatId).emit('close', { message });
   }
 }

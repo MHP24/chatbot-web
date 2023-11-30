@@ -25,7 +25,7 @@ export class RedisService {
   async get<T>(key: string): Promise<T | undefined> {
     try {
       return await this.redisClient.json.get(
-        `${this.configService.get('CHAT_ID')}:${key}`,
+        `${this.configService.get('CHAT_INSTANCE')}:${key}`,
       );
     } catch (error) {
       this.logger.error(`GET: ${error}`);
@@ -36,7 +36,7 @@ export class RedisService {
   async set<T>(key: string, value: T) {
     try {
       return await this.redisClient.json.set(
-        `${this.configService.get('CHAT_ID')}:${key}`,
+        `${this.configService.get('CHAT_INSTANCE')}:${key}`,
         '.',
         value,
       );
@@ -48,12 +48,20 @@ export class RedisService {
   async update<T>(key: string, prop: string, value: T) {
     try {
       return await this.redisClient.json.set(
-        `${this.configService.get('CHAT_ID')}:${key}`,
+        `${this.configService.get('CHAT_INSTANCE')}:${key}`,
         `.${prop}`,
         value,
       );
     } catch (error) {
       this.logger.error(`UPDATE: ${error}`);
+    }
+  }
+
+  async delete(key: string) {
+    try {
+      this.redisClient.del(`${this.configService.get('CHAT_INSTANCE')}:${key}`);
+    } catch (error) {
+      this.logger.error(`DELETE: ${error}`);
     }
   }
 }
