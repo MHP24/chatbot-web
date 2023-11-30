@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Socket } from 'socket.io';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { Chat, EntryClientMessage } from '../common';
+import { GenerateIdAdapter } from '../common/adapters/generate-id.adapter';
 import { FlowService } from 'src/flows/flow.service';
 import { EventsService } from './events';
 import { PrismaService } from 'src/providers/prisma/mysql/prisma.service';
@@ -18,7 +19,16 @@ export class ChatService {
     private readonly prismaService: PrismaService,
     private readonly eventsService: EventsService,
     private readonly flowService: FlowService,
+    private readonly generateId: GenerateIdAdapter,
   ) {}
+
+  // * Handle new or existing chat using HTTP
+  async handleChatRequest(chatId: string) {
+    const chat = await this.redisService.get<Chat>(`chat:${chatId}`);
+    return {
+      chatId: chat?.chatId ?? this.generateId.generate(),
+    };
+  }
 
   // * For new and current clients that already have a chat instance
   async onConnect(client: Socket, chatId: string) {
