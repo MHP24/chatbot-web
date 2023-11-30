@@ -93,6 +93,7 @@ export class ChatService {
       const chat = await this.redisService.get<Chat>(`chat:${chatId}`);
       if (!chat) return;
 
+      clearTimeout(this.chatTimeouts.get(chatId)?.tout);
       await this.redisService.delete(`chat:${chatId}`);
 
       // * DB update with conversation and status code 2 = idle, 3 = finished
@@ -107,7 +108,12 @@ export class ChatService {
         },
       });
 
-      //TODO: add close emitter
+      // * Timeout emitter to the client
+      idle &&
+        this.eventsService.emitTimeoutEvent({
+          chatId,
+          message: 'Closed by inactivity',
+        });
     } catch (error) {
       this.logger.error(error);
     }

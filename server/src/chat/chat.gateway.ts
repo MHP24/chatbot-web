@@ -8,7 +8,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { EventsService } from './events';
-import { OnClose, OnMessage, OnSession } from './types';
+import { OnClose, OnMessage, OnSession, OnTimeout } from './types';
 import { EntryClientMessage } from 'src/common';
 
 @WebSocketGateway({ cors: true })
@@ -32,6 +32,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // * On close
     this.eventsService.onCloseEvent().subscribe((args) => this.emitClose(args));
+
+    // * On inactivity timeout
+    this.eventsService
+      .onTimeoutEvent()
+      .subscribe((args) => this.emitTimeout(args));
   }
 
   // * Listeners
@@ -68,7 +73,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   emitClose(args: OnClose) {
     const { chatId, message = undefined } = args;
-    // TODO: handleClose
+    this.chatService.closeChat(chatId);
     return this.wss.to(chatId).emit('close', { message });
+  }
+
+  emitTimeout(args: OnTimeout) {
+    console.log({ args });
   }
 }

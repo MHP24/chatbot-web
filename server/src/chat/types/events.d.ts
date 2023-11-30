@@ -16,3 +16,8 @@ export type OnClose = {
   chatId: string;
   message?: SystemMessage;
 };
+
+export type OnTimeout = {
+  chatId: string;
+  message: string;
+};
