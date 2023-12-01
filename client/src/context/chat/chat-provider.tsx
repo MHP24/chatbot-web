@@ -28,6 +28,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
       on<OnMessage>('message', receiveMessage)
       on<OnLoad>('load', loadChat)
       on<OnClose>('close', closeChat)
+      on('timeout', (toutData) => { console.log({ toutData }) })
     }
   }, [session])
 
@@ -109,7 +110,8 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
       type: '[Chat] - Close',
       payload: {
         ...INITIAL_STATE,
-        isClosed: true
+        isClosed: true,
+        isOnline: false
       }
     })
   }

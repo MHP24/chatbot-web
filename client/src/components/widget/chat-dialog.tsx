@@ -8,7 +8,6 @@ export const ChatDialog = () => {
 
   useEffect(() => {
     scrollToBottom()
-    console.log({ messages })
   }, [messages])
 
   const scrollToBottom = () => {
@@ -18,8 +17,8 @@ export const ChatDialog = () => {
   }
 
   return (
-    <main className="h-full bg-c2 overflow-y-auto py-6" ref={messagesRef}>
+    <section className="h-full bg-c2 overflow-y-auto py-6 fadeIn__light" ref={messagesRef}>
       <MessagesContainer />
-    </main>
+    </section>
   )
 }

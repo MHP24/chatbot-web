@@ -1,4 +1,4 @@
-import { ChatHeader, ChatDialog, ChatInput } from '.'
+import { ChatHeader, ChatDialog, ChatInput, WidgetLoader } from '.'
 import { useChat, useWidgetContext } from '../../hooks'
 
 export const WidgetWindow = () => {
@@ -14,19 +14,20 @@ export const WidgetWindow = () => {
       fixed top-0 left-0 bottom-0 right-0 
       sm:min-w-[25rem] sm:h-[90vh] sm:aspect-[8/16]
       sm:left-auto sm:top-auto sm:right-10 sm:bottom-5
-      shadow-2xl rounded-xl z-20`}
+      shadow-2xl rounded-xl z-20 border-2 border-c2`}
     >
-      <ChatHeader />
+
       {
         chatId
           ? isOnline || !isClosed
             ? <>
+              <ChatHeader />
               <ChatDialog />
               <ChatInput />
             </>
 
-            : <p> {'El chat se ha cerrado, para interactuar vuelve a abrir la pestañá'} </p>
-          : <p>loading</p>
+            : <p> {'El chat se ha cerrado, para interactuar vuelve a abrir la pestaña'} </p>
+          : <WidgetLoader/>
 
       }
     </div>
