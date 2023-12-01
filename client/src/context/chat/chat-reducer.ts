@@ -61,10 +61,16 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
     case '[Chat] - Load':
       return {
         ...state,
-        chatId: action.payload.chatId
-        // messages: action.payload.messages.map(message => {
-        //   return message
-        // })
+        chatId: action.payload.chatId,
+        messages: [
+          ...state.messages,
+          ...(action.payload.messages.map(({ content, side }) => {
+            return {
+              ...content,
+              side: side !== 'client' ? 'system' : 'client'
+            }
+          }) as Message[])
+        ]
       }
 
     case '[Chat] - Close':

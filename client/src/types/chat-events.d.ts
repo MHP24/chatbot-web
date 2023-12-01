@@ -1,4 +1,4 @@
-import { type Message } from '.'
+import { type MessageSide, type Message } from '.'
 import { type Flow } from './chat'
 
 /* Listeners */
@@ -9,7 +9,10 @@ export type OnSession = {
 
 export type OnLoad = {
   chatId: string
-  messages: Message[]
+  messages: Array<{
+    side: MessageSide
+    content: Message
+  }>
 }
 
 export type OnMessage = {

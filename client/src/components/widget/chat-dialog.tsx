@@ -8,6 +8,7 @@ export const ChatDialog = () => {
 
   useEffect(() => {
     scrollToBottom()
+    console.log({ messages })
   }, [messages])
 
   const scrollToBottom = () => {
