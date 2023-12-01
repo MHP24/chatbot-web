@@ -1,4 +1,4 @@
-import { type Message, type OnSession } from '../../types'
+import { type OnLoad, type Message, type OnSession, type ClientMessage } from '../../types'
 import { type ChatState } from '../../types/chat'
 
 type Action = {
@@ -12,10 +12,13 @@ type Action = {
   payload: Message
 } | {
   type: '[Message] - Add message'
-  payload: string
+  payload: ClientMessage
 } | {
   type: '[Chat] - Close'
   payload: ChatState
+} | {
+  type: '[Chat] - Load'
+  payload: OnLoad
 }
 
 export const chatReducer = (state: ChatState, action: Action): ChatState => {
@@ -46,22 +49,31 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
         messages: [
           ...state.messages,
           {
-            type: 'input',
             side: 'client',
-            data: {
-              input: {
-                detail: action.payload
-              }
+            message: {
+              origin: action.payload.origin,
+              message: action.payload.message
             },
             timestamp: Number(new Date())
           }
         ]
       }
+
+    case '[Chat] - Load':
+      return {
+        ...state,
+        chatId: action.payload.chatId
+        // messages: action.payload.messages.map(message => {
+        //   return message
+        // })
+      }
+
     case '[Chat] - Close':
       return {
         ...state,
         ...action.payload
       }
+
     default:
       return state
   }

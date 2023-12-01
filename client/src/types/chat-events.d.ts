@@ -8,6 +8,7 @@ export type OnSession = {
 }
 
 export type OnLoad = {
+  chatId: string
   messages: Message[]
 }
 

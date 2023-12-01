@@ -1,34 +1,61 @@
-export type MessageType = 'input' | 'option'
 export type MessageSide = 'system' | 'client'
 
-export type BodyElement = {
-  type: string
-  text?: string
-  image?: string
-  caption?: string
+export type BotMessageType =
+  | 'input'
+  | 'option'
+
+export type Image = {
+  type: 'image'
+  image: string
+}
+export type Text = {
+  type: 'text'
+  text: string
+}
+export type Video = {
+  type: 'video'
+  video: string
+}
+export type Audio = {
+  type: 'audio'
+  audio: string
 }
 
+export type BotMessage = {
+  header: string
+  body: BotBodyMessage[]
+  data: Menu
+}
+
+export type Menu = Option | Input
+
 export type Option = {
-  label: string
-  redirect: string
+  type: 'option'
+  option: Array<{
+    label: string
+    redirect: string
+  }>
 }
 
 export type Input = {
-  detail: string
+  type: 'input'
+  input: {
+    regex: null | string
+    errorMessage: string
+    reference: string
+    onValid: {
+      redirect: string
+    }
+  }
 }
 
-export type OnInputValid = {
-  redirect: string
+export type ClientMessage = {
+  origin: 'option' | 'input'
+  message: string
 }
 
 export type Message = {
   side: MessageSide
-  type: MessageType
-  header?: string
-  body?: BodyElement[]
-  data: {
-    option?: Option[]
-    input?: Input
-  }
+  message: BotMessage | ClientMessage
   timestamp: number
 }

@@ -2,8 +2,8 @@ import { useReducer, type FC, type PropsWithChildren, useEffect } from 'react'
 import { ChatContext, chatReducer } from '.'
 import { type ChatState } from '../../types/chat'
 import { useSocket } from '../../hooks'
-import { type OnClose, type OnMessage, type OnSession } from '../../types'
-import { v4 as uuid } from 'uuid' // TODO: Change this..
+import { type OnLoad, type OnClose, type OnMessage, type OnSession } from '../../types'
+import Cookies from 'js-cookie'
 
 const INITIAL_STATE: ChatState = {
   isClosed: true,
@@ -26,17 +26,32 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     if (session.isOnline) {
       on<OnSession>('session', startSession)
       on<OnMessage>('message', receiveMessage)
+      on<OnLoad>('load', loadChat)
       on<OnClose>('close', closeChat)
     }
   }, [session])
 
-  const establishConnection = () => {
-    if (!state.isOnline && state.isClosed) {
-      connect(uuid())
+  const establishConnection = async () => {
+    try {
+      if (!state.isOnline && state.isClosed) {
+        const data = await fetch(
+          import.meta.env.VITE_SERVER_URL +
+        `/chats/request?chatId=${Cookies.get('chat_session')}`
+        )
+        const { chatId } = await data.json()
+        setTimeout(() => {
+          Cookies.set('chat_session', chatId)
+
+          connect(chatId)
+        }, 2000)
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
   const startSession = (sessionContext: OnSession) => {
+    Cookies.set('chat_session', sessionContext.chatId)
     dispatch({
       type: '[Session] - Start session',
       payload: sessionContext
@@ -58,7 +73,10 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
     dispatch({
       type: '[Message] - Add message',
-      payload: message
+      payload: {
+        origin: 'input',
+        message
+      }
     })
   }
 
@@ -69,7 +87,18 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
     dispatch({
       type: '[Message] - Add message',
-      payload: label
+      payload: {
+        origin: 'option',
+        message: label
+      }
+    })
+  }
+
+  const loadChat = (data: OnLoad) => {
+    console.log({ data })
+    dispatch({
+      type: '[Chat] - Load',
+      payload: data
     })
   }
 

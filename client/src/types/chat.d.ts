@@ -13,7 +13,7 @@ export type Chat = {
 export type ChatState = & Chat
 
 export type ChatContextT = {
-  establishConnection: () => void
+  establishConnection: () => Promise<void>
   sendInputMessage: (message: string) => void
   sendOptionMessage: (label: string, redirect: string) => void
 } & Chat
