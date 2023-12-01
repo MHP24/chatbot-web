@@ -1,4 +1,4 @@
-import { type OnLoad, type Message, type OnSession, type ClientMessage } from '../../types'
+import { type OnLoad, type Message, type OnSession, type ClientMessage, type BotMessage } from '../../types'
 import { type ChatState } from '../../types/chat'
 
 type Action = {
@@ -40,7 +40,7 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
         messages: [...state.messages, {
           ...action.payload,
           side: 'system'
-        }]
+        } as BotMessage]
       }
 
     case '[Message] - Add message':
@@ -49,13 +49,12 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
         messages: [
           ...state.messages,
           {
-            side: 'client',
-            message: {
-              origin: action.payload.origin,
-              message: action.payload.message
-            },
+            side: action.payload.side,
+            origin: action.payload.origin,
+            message: action.payload.message,
             timestamp: Number(new Date())
           }
+
         ]
       }
 

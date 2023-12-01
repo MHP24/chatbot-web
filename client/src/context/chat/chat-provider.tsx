@@ -74,6 +74,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({
       type: '[Message] - Add message',
       payload: {
+        side: 'client',
         origin: 'input',
         message
       }
@@ -88,6 +89,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({
       type: '[Message] - Add message',
       payload: {
+        side: 'client',
         origin: 'option',
         message: label
       }
@@ -95,7 +97,6 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   const loadChat = (data: OnLoad) => {
-    console.log({ data })
     dispatch({
       type: '[Chat] - Load',
       payload: data

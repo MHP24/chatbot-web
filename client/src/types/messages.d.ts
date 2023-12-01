@@ -22,15 +22,17 @@ export type Audio = {
 }
 
 export type BotMessage = {
+  side: 'system'
+  type: BotMessageType
   header: string
   body: BotBodyMessage[]
   data: Menu
+  timestamp?: number
 }
 
 export type Menu = Option | Input
 
 export type Option = {
-  type: 'option'
   option: Array<{
     label: string
     redirect: string
@@ -38,7 +40,6 @@ export type Option = {
 }
 
 export type Input = {
-  type: 'input'
   input: {
     regex: null | string
     errorMessage: string
@@ -50,12 +51,10 @@ export type Input = {
 }
 
 export type ClientMessage = {
+  side: 'client'
   origin: 'option' | 'input'
   message: string
+  timestamp?: number
 }
 
-export type Message = {
-  side: MessageSide
-  message: BotMessage | ClientMessage
-  timestamp: number
-}
+export type Message = BotMessage | ClientMessage
