@@ -21,3 +21,13 @@ export type OnTimeout = {
   chatId: string;
   message: string;
 };
+
+export type OnLoad = {
+  client: Socket;
+  chatId: string;
+  messages: Array<{
+    side: ChatSide;
+    content: BotMenu<Menu> | ClientMessage;
+    timestamp: number;
+  }>;
+};

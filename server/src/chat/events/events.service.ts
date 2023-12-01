@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Subject } from 'rxjs';
-import { OnSession, OnMessage, OnClose, OnTimeout } from '../types';
+import { OnSession, OnMessage, OnClose, OnTimeout, OnLoad } from '../types';
 
 @Injectable()
 export class EventsService {
   private sessionSubject = new Subject<OnSession>();
   private messageSubject = new Subject<OnMessage>();
   private closeSubject = new Subject<OnClose>();
-  private onTimeoutSubject = new Subject<OnTimeout>();
+  private timeoutSubject = new Subject<OnTimeout>();
+  private loadSubject = new Subject<OnLoad>();
 
   // * Listeners
   onSessionEvent() {
@@ -23,7 +24,11 @@ export class EventsService {
   }
 
   onTimeoutEvent() {
-    return this.onTimeoutSubject.asObservable();
+    return this.timeoutSubject.asObservable();
+  }
+
+  onLoadEvent() {
+    return this.loadSubject.asObservable();
   }
 
   // * Emitters
@@ -40,6 +45,10 @@ export class EventsService {
   }
 
   emitTimeoutEvent(args: OnTimeout) {
-    this.onTimeoutSubject.next(args);
+    this.timeoutSubject.next(args);
+  }
+
+  emitLoadEvent(args: OnLoad) {
+    this.loadSubject.next(args);
   }
 }

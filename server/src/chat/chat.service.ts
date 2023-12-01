@@ -40,8 +40,12 @@ export class ChatService {
       this.revalidateChat(conversationId);
 
       if (chat) {
-        // TODO: Emit load
-        this.logger.log(`${conversationId} loaded`);
+        this.eventsService.emitLoadEvent({
+          chatId,
+          client,
+          messages: chat.context[chat.context.currentFlow].history,
+        });
+        this.logger.log(`Loaded: ${conversationId}`);
         return;
       }
 
