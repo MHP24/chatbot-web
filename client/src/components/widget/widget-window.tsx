@@ -1,9 +1,9 @@
-import { ChatHeader, ChatDialog, ChatInput, WidgetLoader } from '.'
+import { ChatHeader, ChatDialog, ChatInput, WidgetLoader, WidgetClosed } from '.'
 import { useChat, useWidgetContext } from '../../hooks'
 
 export const WidgetWindow = () => {
   const { isOpen, timesOpened } = useWidgetContext()
-  const { isClosed, isOnline, chatId } = useChat()
+  const { isClosed, isOnline } = useChat()
 
   const animation = isOpen ? 'fadeIn' : 'fadeOut'
 
@@ -18,16 +18,16 @@ export const WidgetWindow = () => {
     >
 
       {
-        chatId
-          ? isOnline || !isClosed
-            ? <>
-              <ChatHeader />
-              <ChatDialog />
-              <ChatInput />
-            </>
 
-            : <p> {'El chat se ha cerrado, para interactuar vuelve a abrir la pestaña'} </p>
-          : <WidgetLoader/>
+        isOnline
+          ? <>
+            <ChatHeader />
+            <ChatDialog />
+            <ChatInput />
+          </>
+          : isClosed
+            ? <WidgetClosed/>
+            : <WidgetLoader/>
 
       }
     </div>

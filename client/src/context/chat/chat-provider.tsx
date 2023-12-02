@@ -6,7 +6,7 @@ import { type OnLoad, type OnClose, type OnMessage, type OnSession } from '../..
 import Cookies from 'js-cookie'
 
 const INITIAL_STATE: ChatState = {
-  isClosed: true,
+  isClosed: false,
   isOnline: false,
   chatId: undefined,
   flow: undefined,
@@ -32,19 +32,23 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [session])
 
+  const createChat = async (time: number = 2000) => {
+    const data = await fetch(
+      import.meta.env.VITE_SERVER_URL +
+        `/chats/request?chatId=${Cookies.get('chat_session')}`
+    )
+    const { chatId } = await data.json()
+    setTimeout(() => {
+      Cookies.set('chat_session', chatId)
+
+      connect(chatId)
+    }, time)
+  }
+
   const establishConnection = async () => {
     try {
-      if (!state.isOnline && state.isClosed) {
-        const data = await fetch(
-          import.meta.env.VITE_SERVER_URL +
-        `/chats/request?chatId=${Cookies.get('chat_session')}`
-        )
-        const { chatId } = await data.json()
-        setTimeout(() => {
-          Cookies.set('chat_session', chatId)
-
-          connect(chatId)
-        }, 2000)
+      if (!state.isOnline && !state.isClosed) {
+        await createChat()
       }
     } catch (error) {
       console.error(error)
@@ -116,13 +120,18 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  const createNewChat = async () => {
+    await createChat(0)
+  }
+
   return (
     <ChatContext.Provider
       value={{
         ...state,
         establishConnection,
         sendInputMessage,
-        sendOptionMessage
+        sendOptionMessage,
+        createNewChat
       }}
     >
       {children}

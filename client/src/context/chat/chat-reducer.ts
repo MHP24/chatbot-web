@@ -30,8 +30,7 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
       return {
         ...state,
         chatId: action.payload.chatId,
-        flow: action.payload.flow,
-        isClosed: false
+        flow: action.payload.flow
       }
 
     case '[Message] - Receive':

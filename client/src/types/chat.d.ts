@@ -16,4 +16,5 @@ export type ChatContextT = {
   establishConnection: () => Promise<void>
   sendInputMessage: (message: string) => void
   sendOptionMessage: (label: string, redirect: string) => void
+  createNewChat: () => Promise<void>
 } & Chat

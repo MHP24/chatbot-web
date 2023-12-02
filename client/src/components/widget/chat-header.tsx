@@ -26,7 +26,7 @@ export const ChatHeader = () => {
           <h1 className="text-2xl font-semibold">ChatBot</h1>
 
           {/* Status label */}
-          <p className="text-md opacity-50">En linea</p>
+          <p className="text-md opacity-50">En l&iacute;nea</p>
         </div>
       </div>
 
