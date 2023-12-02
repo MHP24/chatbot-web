@@ -10,6 +10,7 @@ import {
   BotContext,
 } from 'src/flows/types';
 import { RedisService } from 'src/providers/cache/redis.service';
+import { dnis } from '../../mocks/data';
 
 @Injectable()
 export class ActionService {
@@ -25,6 +26,7 @@ export class ActionService {
     // * All actions available
     this.actions = {
       contact: this.contact.bind(this),
+      products: this.products.bind(this),
     };
   }
 
@@ -73,6 +75,50 @@ export class ActionService {
             redirect: 'home:exit',
           },
         ],
+      },
+    };
+  }
+
+  async products(
+    data: BotDataResponse,
+    context: BotContext,
+  ): Promise<BotMenu<Input | Option>> {
+    console.log({ data, context });
+    const dni = getVariable('dni', context.variables);
+    console.log({ dni });
+    const products = dnis[dni.toString()];
+    console.log({ products });
+    if (!products) {
+      return {
+        type: 'option',
+        header: 'No existe',
+        body: [],
+        data: {
+          option: [
+            {
+              label: 'Intentar nuevamente',
+              redirect: 'home:test',
+            },
+          ],
+        },
+      };
+    }
+
+    return {
+      type: 'option',
+      variant: 'dynamic',
+      header: `Tienes los siguientes productos ${dni}:`,
+      body: [],
+      data: {
+        option: products.map((product: string, i: number) => ({
+          label: product.replace(/\d/, (d) => ` ${d}`),
+          redirect: `product-${i + 1}`,
+          variable: {
+            reference: 'user_product',
+            value: product,
+            destination: 'dynamic:productcheck',
+          },
+        })),
       },
     };
   }

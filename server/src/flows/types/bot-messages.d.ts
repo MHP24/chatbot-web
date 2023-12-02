@@ -26,6 +26,7 @@ export type BotBodyMessage = Image | Text | Video | Audio;
 
 export type BotMenu<T> = {
   type: BotMessageType;
+  variant?: string;
   header: string;
   body: Array<BotBodyMessage>;
   data: T;
@@ -39,6 +40,11 @@ export type Option = {
   option: Array<{
     label: string;
     redirect: string;
+    variable?: {
+      destination: string;
+      reference: string;
+      value: string;
+    };
   }>;
 };
 

@@ -24,10 +24,30 @@ export const home: Record<string, BotMenu<Menu>> = {
           redirect: 'home:about',
         },
         {
+          label: 'Prueba',
+          redirect: 'home:test',
+        },
+        {
           label: 'Contactar con Miguel',
           redirect: 'contact:start',
         },
       ],
+    },
+  },
+
+  test: {
+    type: 'input',
+    header: 'Ingrese DNI',
+    body: [],
+    data: {
+      input: {
+        errorMessage: 'DNI Inválido',
+        reference: 'dni',
+        regex: null,
+        onValid: {
+          redirect: 'dynamic:products',
+        },
+      },
     },
   },
 
