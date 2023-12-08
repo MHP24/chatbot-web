@@ -126,7 +126,7 @@ export class ChatService {
       idle &&
         this.eventsService.emitTimeoutEvent({
           chatId,
-          message: 'Closed by inactivity',
+          reason: 'El chat se ha cerrado por inactividad prolongada.',
         });
     } catch (error) {
       this.logger.error(error);

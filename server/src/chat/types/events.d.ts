@@ -19,7 +19,7 @@ export type OnClose = {
 
 export type OnTimeout = {
   chatId: string;
-  message: string;
+  reason: string;
 };
 
 export type OnLoad = {
