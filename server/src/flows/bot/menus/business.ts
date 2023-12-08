@@ -1,6 +1,6 @@
-import { BotMessage } from '../../../flows/types';
+import { BotMenu, Menu } from '../../types';
 
-export const business: Record<string, BotMessage> = {
+export const business: Record<string, BotMenu<Menu>> = {
   portfolio: {
     type: 'option',
     header: '¡Automatiza tu negocio!',

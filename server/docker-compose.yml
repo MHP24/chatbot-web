@@ -7,3 +7,14 @@ services:
     restart: always
     ports:
       - ${REDIS_PORT}:6379
+  db:
+    image: mariadb:11.1.2-jammy
+    restart: always
+    container_name: ${DB_NAME}
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+    volumes:
+      - ./etc/volumes/mariadb:/var/lib/mysql
+    ports:
+      - ${DB_PORT}:3306

@@ -5,11 +5,11 @@ import './index.css'
 import { ChatProvider, WidgetProvider } from './context/'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ChatProvider>
-      <WidgetProvider>
-        <App />
-      </WidgetProvider>
-    </ChatProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <ChatProvider>
+    <WidgetProvider>
+      <App />
+    </WidgetProvider>
+  </ChatProvider>
+  // </React.StrictMode>
 )

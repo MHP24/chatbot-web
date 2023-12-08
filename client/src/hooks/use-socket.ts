@@ -6,7 +6,7 @@ type Session = {
   isOnline: boolean
 }
 
-export const useSocket = () => {
+export const useSocket = (serverUrl: string) => {
   const [session, setSession] = useState<Session>({
     socket: undefined,
     isOnline: false
@@ -20,7 +20,7 @@ export const useSocket = () => {
   }, [session])
 
   const connect = (authentication = '') => {
-    const ioSession = io('http://127.0.0.1:3001', {
+    const ioSession = io(serverUrl, {
       extraHeaders: {
         authentication
       }

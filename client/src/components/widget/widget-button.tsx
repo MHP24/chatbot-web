@@ -6,9 +6,9 @@ export const WidgetButton = () => {
   const { establishConnection } = useChat()
   const animation = !isOpen ? 'fadeIn' : 'fadeOut'
 
-  const onClick = () => {
+  const onClick = async () => {
     handleWidget(true)
-    establishConnection()
+    await establishConnection()
   }
 
   return (

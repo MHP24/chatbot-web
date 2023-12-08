@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "../../../../node_modules/@mysql/prisma/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Chat {
+  id    Int     @id @default(autoincrement()) @map("id")
+  chatInstance String @map("chat_instance")
+  chatId String  @unique @map("chat_id")
+  conversation Json? @map("conversation")
+  status Int @default(1) @map("status") // 1: start,  2: left,  3: finish
+  startDate  DateTime @default(now()) @map("start_date")
+  endDate  DateTime? @map("end_date")
+  @@map("chats")
+}

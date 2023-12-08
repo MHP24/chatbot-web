@@ -1,13 +1,16 @@
-import { BotMessage } from '../../../flows/types';
-export const contact: Record<string, BotMessage> = {
+import { BotMenu, Menu } from '../../types';
+
+export const contact: Record<string, BotMenu<Menu>> = {
   start: {
     type: 'input',
+    header: 'Por favor, a continuación ingresa tu email:',
+    body: [],
     data: {
       input: {
-        input: 'Por favor, a continuación ingresa tu email:',
+        reference: 'mail-contact',
         regex: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$',
-        error_message: 'Por favor, ingresa un email válido.',
-        on_input_valid: {
+        errorMessage: 'Por favor, ingresa un email válido.',
+        onValid: {
           redirect: 'contact:subject',
         },
       },
@@ -16,12 +19,14 @@ export const contact: Record<string, BotMessage> = {
 
   subject: {
     type: 'input',
+    header: '¿Que información te gustaría recibir?',
+    body: [],
     data: {
       input: {
-        input: '¿Que información te gustaría recibir?',
+        reference: 'subject-contact',
         regex: null,
-        error_message: 'Por favor, ingresa un asunto válido',
-        on_input_valid: {
+        errorMessage: 'Por favor, ingresa un asunto válido',
+        onValid: {
           redirect: 'contact:send',
         },
       },
@@ -40,12 +45,10 @@ export const contact: Record<string, BotMessage> = {
       { type: 'text', text: '¿Necesitas algo más?' },
     ],
     data: {
-      option: [
-        { label: 'Si', redirect: 'home:start' },
-        { label: 'No', redirect: 'home:exit' },
-      ],
+      action: {
+        name: 'contact',
+        options: [],
+      },
     },
-    action: 'contact',
-    parameters_required: 2,
   },
 };

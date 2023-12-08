@@ -1,6 +1,6 @@
-import { BotMessage } from '../../../flows/types';
+import { BotMenu, Menu } from '../../types';
 
-export const home: Record<string, BotMessage> = {
+export const home: Record<string, BotMenu<Menu>> = {
   start: {
     type: 'option',
     header: '¡Hola! Soy el asistente virtual de Miguel',
@@ -24,10 +24,30 @@ export const home: Record<string, BotMessage> = {
           redirect: 'home:about',
         },
         {
+          label: 'Prueba',
+          redirect: 'home:test',
+        },
+        {
           label: 'Contactar con Miguel',
           redirect: 'contact:start',
         },
       ],
+    },
+  },
+
+  test: {
+    type: 'input',
+    header: 'Ingrese DNI',
+    body: [],
+    data: {
+      input: {
+        errorMessage: 'DNI Inválido',
+        reference: 'dni',
+        regex: null,
+        onValid: {
+          redirect: 'dynamic:products',
+        },
+      },
     },
   },
 
@@ -38,17 +58,14 @@ export const home: Record<string, BotMessage> = {
       {
         type: 'image',
         image: 'https://mg-hp.com/msc/logo.jpg',
-        caption: 'Proyecto 1 caption',
       },
       {
         type: 'image',
         image: 'https://mg-hp.com/msc/logo.jpg',
-        caption: 'Proyecto 2 caption',
       },
       {
         type: 'image',
         image: 'https://mg-hp.com/msc/logo.jpg',
-        caption: 'Proyecto 3 caption',
       },
       {
         type: 'text',
@@ -119,6 +136,17 @@ export const home: Record<string, BotMessage> = {
   exit: {
     type: 'close',
     header: '¡Gracias por tu tiempo!',
-    body: 'Si tienes más preguntas, no dudes en volver. ¡Que tengas un gran día!',
+    body: [
+      {
+        type: 'text',
+        text: 'Si tienes más preguntas, no dudes en volver. ¡Que tengas un gran día!',
+      },
+    ],
+    data: {
+      close: {
+        detail:
+          'El chat se ha cerrado, para volver a interactuar refresca la pestaña del navegador.',
+      },
+    },
   },
 };

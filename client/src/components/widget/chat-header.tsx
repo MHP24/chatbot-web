@@ -6,7 +6,7 @@ export const ChatHeader = () => {
   const { handleWidget } = useWidgetContext()
 
   return (
-    <header className="flex h-[20%] w-full px-6 py-3 pr-3 bg-c1
+    <section className="flex h-[20%] w-full px-6 py-3 pr-3 bg-c1
       rounded-tr-xl rounded-tl-xl shadow-2xl"
     >
 
@@ -26,7 +26,7 @@ export const ChatHeader = () => {
           <h1 className="text-2xl font-semibold">ChatBot</h1>
 
           {/* Status label */}
-          <p className="text-md opacity-50">En linea</p>
+          <p className="text-md opacity-50">En l&iacute;nea</p>
         </div>
       </div>
 
@@ -37,6 +37,6 @@ export const ChatHeader = () => {
         </button>
       </div>
 
-    </header>
+    </section>
   )
 }

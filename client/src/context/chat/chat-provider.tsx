@@ -2,19 +2,20 @@ import { useReducer, type FC, type PropsWithChildren, useEffect } from 'react'
 import { ChatContext, chatReducer } from '.'
 import { type ChatState } from '../../types/chat'
 import { useSocket } from '../../hooks'
-import { type OnMessage, type OnSession } from '../../types'
-import { v4 as uuid } from 'uuid' // TODO: Change this..
+import { type OnLoad, type OnClose, type OnMessage, type OnSession } from '../../types'
+import Cookies from 'js-cookie'
 
 const INITIAL_STATE: ChatState = {
+  isClosed: false,
   isOnline: false,
-  sessionId: undefined,
+  chatId: undefined,
   flow: undefined,
   messages: []
 }
 
 export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE)
-  const { session, connect, on, emit } = useSocket()
+  const { session, connect, disconnect, on, emit } = useSocket(import.meta.env.VITE_SERVER_URL)
 
   useEffect(() => {
     dispatch({
@@ -25,37 +26,113 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     if (session.isOnline) {
       on<OnSession>('session', startSession)
       on<OnMessage>('message', receiveMessage)
+      on<OnLoad>('load', loadChat)
+      on<OnClose>('close', closeChat)
+      on('timeout', (toutData) => { console.log({ toutData }) })
     }
   }, [session])
 
-  const establishConnection = () => {
-    !state.isOnline && connect(uuid())
+  const createChat = async (time: number = 2000) => {
+    const data = await fetch(
+      import.meta.env.VITE_SERVER_URL +
+        `/chats/request?chatId=${Cookies.get('chat_session')}`
+    )
+    const { chatId } = await data.json()
+    setTimeout(() => {
+      Cookies.set('chat_session', chatId)
+
+      connect(chatId)
+    }, time)
+  }
+
+  const establishConnection = async () => {
+    try {
+      if (!state.isOnline && !state.isClosed) {
+        await createChat()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const startSession = (sessionContext: OnSession) => {
+    Cookies.set('chat_session', sessionContext.chatId)
     dispatch({
       type: '[Session] - Start session',
       payload: sessionContext
     })
   }
 
-  const receiveMessage = (message: OnMessage) => {
+  const receiveMessage = (onMessage: OnMessage) => {
+    const { message } = onMessage
     dispatch({
       type: '[Message] - Receive',
       payload: message
     })
   }
 
-  const sendMessage = (type: string, message: string) => {
+  const sendInputMessage = (message: string) => {
     emit('message', {
-      type,
+      origin: 'input',
       message
     })
+    dispatch({
+      type: '[Message] - Add message',
+      payload: {
+        side: 'client',
+        origin: 'input',
+        message
+      }
+    })
+  }
+
+  const sendOptionMessage = (label: string, redirect: string) => {
+    emit('message', {
+      origin: 'option',
+      message: redirect
+    })
+    dispatch({
+      type: '[Message] - Add message',
+      payload: {
+        side: 'client',
+        origin: 'option',
+        message: label
+      }
+    })
+  }
+
+  const loadChat = (data: OnLoad) => {
+    dispatch({
+      type: '[Chat] - Load',
+      payload: data
+    })
+  }
+
+  const closeChat = () => {
+    disconnect()
+    dispatch({
+      type: '[Chat] - Close',
+      payload: {
+        ...INITIAL_STATE,
+        isClosed: true,
+        isOnline: false
+      }
+    })
+  }
+
+  const createNewChat = async () => {
+    await createChat(0)
   }
 
   return (
     <ChatContext.Provider
-      value={{ ...state, establishConnection, sendMessage }}
+      value={{
+        ...state,
+        establishConnection,
+        sendInputMessage,
+        sendOptionMessage,
+        createNewChat
+      }}
     >
       {children}
     </ChatContext.Provider>

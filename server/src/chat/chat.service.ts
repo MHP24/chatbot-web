@@ -1,113 +1,135 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Server, Socket } from 'socket.io';
-import { GenerateIdAdapter } from '../common/adapters';
-import { Chat, Flow, ClientMessage, EntryClientMessage } from '../common/types';
-import { RedisService } from '../providers/cache/redis.service';
+import { Socket } from 'socket.io';
+import { RedisService } from 'src/providers/cache/redis.service';
+import { Chat, EntryClientMessage } from '../common';
+import { GenerateIdAdapter } from '../common/adapters/generate-id.adapter';
 import { FlowService } from 'src/flows/flow.service';
-import { BotMessage } from 'src/flows/types';
+import { EventsService } from './events';
+import { PrismaService } from 'src/providers/prisma/mysql/prisma.service';
 
 @Injectable()
 export class ChatService {
   logger = new Logger('ChatService');
+  chatTimeouts = new Map<string, { tout: NodeJS.Timeout }>();
 
   constructor(
-    // TODO: add session service
     private readonly configService: ConfigService,
     private readonly redisService: RedisService,
-    private readonly generateId: GenerateIdAdapter,
+    private readonly prismaService: PrismaService,
+    private readonly eventsService: EventsService,
     private readonly flowService: FlowService,
+    private readonly generateId: GenerateIdAdapter,
   ) {}
 
-  /* Event listeners */
-  async onConnect(server: Server, client: Socket, id: string) {
-    const session = await this.redisService.get<Chat>(`chat:${id}`);
-
-    const room = id;
-    client.join(room);
-
-    if (session) {
-      // TODO: emitLoad
-      this.logger.log(`${room} loaded`);
-      return;
-    }
-
-    await this.initializeChat(server, room);
-
-    this.logger.log(`Session ${room} created`);
-    return this.emitSession(server, {
-      sessionId: room,
-      flow: this.configService.get('DEFAULT_FLOW'),
-    });
-  }
-
-  onDisconnect() {}
-
-  async onMessage(server: Server, sessionId: string, data: EntryClientMessage) {
-    const session = await this.redisService.get<Chat>(`chat:${sessionId}`);
-
-    const flowResponse = await this.flowService.handleFlow({
-      sessionId,
-      message: {
-        type: data.type,
-        data: data.message,
-      },
-      timestamp: Number(new Date()),
-      context: session.context,
-    });
-
-    // if (flowResponse.hasToClose) {
-    //   setTimeout(() => {
-    //  emit..
-    //   }, 3000);
-    // }
-
-    flowResponse && this.emitMessage(server, sessionId, flowResponse);
-  }
-
-  /* Event emitters */
-  emitSession(server: Server, context: { sessionId: string; flow: Flow }) {
-    return server.to(context.sessionId).emit('session', context);
-  }
-
-  emitLoad() {}
-
-  /* Chat interactions */
-  emitMessage(server: Server, sessionId: string, message: BotMessage) {
-    return server.to(sessionId).emit('message', message);
-  }
-  emitTransfer() {}
-  emitClose() {}
-  emitChatLoad() {}
-
-  async initializeChat(server: Server, id: string) {
-    const timestamp = Number(new Date());
-    const defaultFlow = this.configService.get('DEFAULT_FLOW');
-
-    await this.redisService.set<Chat>(`chat:${id}`, {
-      sessionId: id,
-      startDate: timestamp,
-      lastUserInteraction: timestamp,
-      context: {
-        currentFlow: defaultFlow,
-      },
-      history: [],
-      log: [],
-    });
-
-    const defaultMessage: ClientMessage = {
-      sessionId: id,
-      message: {
-        type: this.configService.get('DEFAULT_FLOW_KEY_TYPE'),
-        data: this.configService.get('DEFAULT_FLOW_KEY'),
-      },
-      timestamp,
-      context: {
-        currentFlow: defaultFlow,
-      },
+  // * Handle new or existing chat using HTTP
+  async handleChatRequest(chatId: string) {
+    const chat = await this.redisService.get<Chat>(`chat:${chatId}`);
+    return {
+      chatId: chat?.chatId ?? this.generateId.generate(),
     };
+  }
 
-    const flowResponse = await this.flowService.handleFlow(defaultMessage);
-    flowResponse && this.emitMessage(server, id, flowResponse);
+  // * For new and current clients that already have a chat instance
+  async onConnect(client: Socket, chatId: string) {
+    try {
+      this.logger.log(`Connected: ${chatId}`);
+
+      const chat = await this.redisService.get<Chat>(`chat:${chatId}`);
+      const conversationId = chat?.chatId ?? chatId;
+      this.revalidateChat(conversationId);
+
+      if (chat) {
+        this.eventsService.emitLoadEvent({
+          chatId,
+          client,
+          messages: chat.context[chat.context.currentFlow].history,
+        });
+        this.logger.log(`Loaded: ${conversationId}`);
+        return;
+      }
+
+      await this.prismaService.chat.create({
+        data: {
+          chatId: conversationId,
+          chatInstance: this.configService.get('CHAT_INSTANCE'),
+        },
+      });
+
+      this.eventsService.emitSessionEvent({
+        client,
+        chatId: conversationId,
+        flow: this.configService.get('DEFAULT_FLOW'),
+      });
+
+      await this.flowService.handleFlow(conversationId, null);
+    } catch (error) {
+      this.logger.error(`Failed initializing chat ${error}`);
+    }
+  }
+
+  // * Messages from client side
+  async onMessage(chatId: string, message: EntryClientMessage) {
+    try {
+      this.revalidateChat(chatId);
+      await this.flowService.handleFlow(chatId, message);
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  // * Disconnections from client side
+  async onDisconnect(chatId: string) {
+    try {
+      this.logger.log(`Disconnected: ${chatId}`);
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  // * Revalidation for inactivity on chats (must be used on messages)
+  async revalidateChat(chatId: string) {
+    const chatTimeout = this.chatTimeouts.get(chatId);
+    clearTimeout(chatTimeout?.tout);
+
+    // * Close for inactivity
+    this.chatTimeouts.set(chatId, {
+      tout: setTimeout(
+        () => this.closeChat(chatId, true),
+        this.configService.get('CHAT_TIMEOUT') * 1000,
+      ),
+    });
+  }
+
+  // * Close on chat emitter or inactivity
+  async closeChat(chatId: string, idle: boolean = false) {
+    try {
+      const chat = await this.redisService.get<Chat>(`chat:${chatId}`);
+      if (!chat) return;
+
+      clearTimeout(this.chatTimeouts.get(chatId)?.tout);
+      await this.redisService.delete(`chat:${chatId}`);
+
+      // * DB update with conversation and status code 2 = idle, 3 = finished
+      await this.prismaService.chat.update({
+        where: {
+          chatId,
+        },
+        data: {
+          status: idle ? 2 : 3,
+          conversation: JSON.stringify(chat),
+          endDate: new Date(),
+        },
+      });
+
+      // * Timeout emitter to the client
+      idle &&
+        this.eventsService.emitTimeoutEvent({
+          chatId,
+          message: 'Closed by inactivity',
+        });
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }

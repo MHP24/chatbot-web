@@ -2,14 +2,18 @@ import { type FormEvent, useRef } from 'react'
 import { useChat } from '../../hooks'
 
 export const ChatInput = () => {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const { sendMessage } = useChat()
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const { sendInputMessage } = useChat()
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const message = `${inputRef.current?.value}`.trim()
-    if (message.length === 0) return
-    sendMessage('option', message)
+    if (inputRef.current) {
+      const message = inputRef.current.value.trim()
+      if (message.length === 0) return
+
+      sendInputMessage(message)
+      inputRef.current.value = ''
+    }
   }
 
   return (

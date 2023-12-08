@@ -1,17 +1,17 @@
+import { BotMenu, Input, Option } from '../../flows/types';
 import { ChatContext } from '.';
-import { BodyElement, Input, Option } from 'src/flows/types';
 
-export type MessageType = 'input' | 'option' | 'close' | 'action';
+export type MessageOrigin = 'input' | 'option';
 
 export type EntryClientMessage = {
-  type: MessageType;
+  origin: MessageOrigin;
   message: string;
 };
 
 export type ClientMessage = {
-  sessionId: string;
+  chatId: string;
   message: {
-    type: MessageType;
+    type: ClientMessageType;
     data: string;
   };
   timestamp: number;
@@ -19,13 +19,5 @@ export type ClientMessage = {
 };
 
 export type SystemMessage = {
-  type: MessageType;
-  header?: string;
-  body?: BodyElement[];
-  data: {
-    option?: Option[];
-    input?: Input;
-  };
-  // Interactions
-  hasToClose?: boolean;
-};
+  timestamp: number;
+} & BotMenu<Input | Option>;
