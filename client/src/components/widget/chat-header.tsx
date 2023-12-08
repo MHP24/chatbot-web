@@ -1,9 +1,9 @@
 import botIllustration from '../../assets/svgs/bot.svg'
 import closeOption from '../../assets/svgs/close.svg'
-import { useWidgetContext } from '../../hooks'
+import { useWidget } from '../../hooks'
 
 export const ChatHeader = () => {
-  const { handleWidget } = useWidgetContext()
+  const { handleWidget } = useWidget()
 
   return (
     <section className="flex h-[20%] w-full px-6 py-3 pr-3 bg-c1

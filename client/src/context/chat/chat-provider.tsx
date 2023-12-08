@@ -2,7 +2,13 @@ import { useReducer, type FC, type PropsWithChildren, useEffect } from 'react'
 import { ChatContext, chatReducer } from '.'
 import { type ChatState } from '../../types/chat'
 import { useSocket } from '../../hooks'
-import { type OnLoad, type OnClose, type OnMessage, type OnSession } from '../../types'
+import {
+  type OnLoad,
+  type OnClose,
+  type OnMessage,
+  type OnSession,
+  type OnTimeout
+} from '../../types'
 import Cookies from 'js-cookie'
 
 const INITIAL_STATE: ChatState = {
@@ -28,7 +34,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
       on<OnMessage>('message', receiveMessage)
       on<OnLoad>('load', loadChat)
       on<OnClose>('close', closeChat)
-      on('timeout', (toutData) => { console.log({ toutData }) })
+      on<OnTimeout>('timeout', timeoutChat)
     }
   }, [session])
 
@@ -116,6 +122,18 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
         ...INITIAL_STATE,
         isClosed: true,
         isOnline: false
+      }
+    })
+  }
+
+  const timeoutChat = (data: OnTimeout) => {
+    dispatch({
+      type: '[Chat] - Close',
+      payload: {
+        ...INITIAL_STATE,
+        isClosed: true,
+        isOnline: false,
+        closeReason: data.reason
       }
     })
   }

@@ -4,6 +4,7 @@ export type Flow = 'bot' | 'agent' | 'survey'
 
 export type Chat = {
   isClosed: boolean
+  closeReason?: string
   isOnline: boolean
   chatId?: string
   flow?: Flow

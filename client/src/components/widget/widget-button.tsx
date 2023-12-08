@@ -1,8 +1,8 @@
-import { useChat, useWidgetContext } from '../../hooks'
+import { useChat, useWidget } from '../../hooks'
 import chatLogo from '../../assets/svgs/chat.svg'
 
 export const WidgetButton = () => {
-  const { handleWidget, isOpen } = useWidgetContext()
+  const { handleWidget, isOpen } = useWidget()
   const { establishConnection } = useChat()
   const animation = !isOpen ? 'fadeIn' : 'fadeOut'
 

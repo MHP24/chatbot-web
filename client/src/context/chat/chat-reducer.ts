@@ -30,6 +30,7 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
       return {
         ...state,
         chatId: action.payload.chatId,
+        closeReason: undefined,
         flow: action.payload.flow
       }
 
