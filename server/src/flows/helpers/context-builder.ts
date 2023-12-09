@@ -22,11 +22,6 @@ export const buildContext = (
       ],
       history: [
         {
-          side: 'client',
-          content: clientMessage,
-          timestamp: clientTimestamp,
-        },
-        {
           side: 'bot',
           content: botResponse,
           timestamp: botTimestamp,

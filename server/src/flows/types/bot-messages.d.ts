@@ -24,9 +24,11 @@ export type Audio = {
 
 export type BotBodyMessage = Image | Text | Video | Audio;
 
+export type BotMenuVariant = 'dynamic';
+
 export type BotMenu<T> = {
   type: BotMessageType;
-  variant?: string;
+  variant?: BotMenuVariant;
   header: string;
   body: Array<BotBodyMessage>;
   data: T;

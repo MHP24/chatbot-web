@@ -13,6 +13,7 @@ import { ChatModule } from './chat/chat.module';
 // Flows
 import { BotModule } from './flows/bot/bot.module';
 import { CommonModule } from './common/common.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CommonModule } from './common/common.module';
     ChatModule,
     BotModule,
     CommonModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
