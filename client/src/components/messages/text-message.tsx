@@ -1,4 +1,5 @@
 import { type FC } from 'react'
+import { formatTimestamp } from '../../utils'
 
 type Props = {
   side: string
@@ -13,13 +14,6 @@ export const TextMessage: FC<Props> = ({ side, text, timestamp }) => {
     : 'bg-c1 mr-0 rounded-tl-none'
   const containerStyles = isClient ? 'justify-end' : 'justify-start'
 
-  const date = new Date(timestamp ?? 0)
-
-  const hours = date.getHours().toString().padStart(2, '0')
-  const minutes = date.getMinutes().toString().padStart(2, '0')
-
-  const time = `${hours}:${minutes}`
-
   return (
     <div className={` flex ${containerStyles}`}>
       <div
@@ -31,7 +25,7 @@ export const TextMessage: FC<Props> = ({ side, text, timestamp }) => {
             : <p className="text-md">{text}</p>
 
         }
-        {timestamp && <small className="text-[.7rem] text-end opacity-50">{time}</small>}
+        {timestamp && <small className="text-[.7rem] text-end opacity-50">{formatTimestamp(timestamp)}</small>}
       </div>
     </div>
   )

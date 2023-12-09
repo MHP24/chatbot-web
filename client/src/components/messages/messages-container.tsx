@@ -1,4 +1,4 @@
-import { InteractiveMessage, TextMessage } from '.'
+import { ImageMessage, InteractiveMessage, TextMessage } from '.'
 import { useChat } from '../../hooks'
 import { type Option } from '../../types'
 
@@ -20,7 +20,6 @@ export const MessagesContainer = () => {
               )
             }
 
-            {/* For system messages */}
             {/* Text messages header content */}
             {
               message.side === 'system' && message.header &&
@@ -36,19 +35,23 @@ export const MessagesContainer = () => {
             {/* Body from system message */}
             {
               message.side === 'system' && message.body && (
-                <div className='my-4'>
+                <div className='my-4 flex flex-col gap-6'>
                   {message.body
-                    .slice(0, message.type === 'option' ? -1 : message.body.length)
+                    .slice(0, message.type === 'option'
+                      ? -1
+                      : message.body.length)
                     .map(
-                      ({ text }, j) =>
-                        text && (
-                          <TextMessage
+                      (bodyMessage, j) =>
+                        bodyMessage.type === 'text'
+                          ? <TextMessage
                             key={`message-${i}-${j}`}
                             side={message.side}
-                            text={text}
+                            text={bodyMessage.text}
                             timestamp={message.timestamp}
                           />
-                        )
+                          : bodyMessage.type === 'image'
+                            ? <ImageMessage {...{ ...bodyMessage, timestamp: message.timestamp }}/>
+                            : undefined
                     )}
                 </div>
               )
@@ -61,7 +64,11 @@ export const MessagesContainer = () => {
               (
                 <InteractiveMessage
                   options={(message.data as Option).option}
-                  header={message.body ? message.body.at(-1)?.text : undefined}
+                  header={
+                    message.body && message.body.at(-1)?.type === 'text'
+                      ? (message.body.at(-1) as any).text
+                      : undefined
+                  }
                 />
               )
             }
