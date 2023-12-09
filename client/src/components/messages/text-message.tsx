@@ -7,11 +7,11 @@ type Props = {
 }
 
 export const TextMessage: FC<Props> = ({ side, text, timestamp }) => {
-  const isClient = side !== 'client'
+  const isClient = side === 'client'
   const styles = isClient
-    ? 'bg-c1 mr-0 rounded-tl-none'
-    : 'bg-c4 text-c1 ml-0 rounded-tr-none'
-  const containerStyles = isClient ? 'justify-start' : 'justify-end'
+    ? 'bg-c4 text-c1 ml-0 rounded-tr-none'
+    : 'bg-c1 mr-0 rounded-tl-none'
+  const containerStyles = isClient ? 'justify-end' : 'justify-start'
 
   const date = new Date(timestamp ?? 0)
 
@@ -25,7 +25,12 @@ export const TextMessage: FC<Props> = ({ side, text, timestamp }) => {
       <div
         className={`flex items-end gap-2 rounded-xl text-md w-fit max-w-[90%] py-2 px-6 shadow-sm ${styles}`}
       >
-        <p className="text-md ">{text}</p>
+        {
+          !isClient
+            ? <div className="text-md" dangerouslySetInnerHTML={{ __html: text }}></div>
+            : <p className="text-md">{text}</p>
+
+        }
         {timestamp && <small className="text-[.7rem] text-end opacity-50">{time}</small>}
       </div>
     </div>

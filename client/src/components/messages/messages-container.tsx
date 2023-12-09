@@ -21,7 +21,6 @@ export const MessagesContainer = () => {
             }
 
             {/* For system messages */}
-
             {/* Text messages header content */}
             {
               message.side === 'system' && message.header &&
