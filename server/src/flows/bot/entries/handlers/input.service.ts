@@ -18,7 +18,6 @@ export class InputService {
   async handleInput(
     contextData: FlowEntry<BotContext>,
   ): Promise<BotEntryResponse> {
-    console.log({ contextData });
     const { message } = contextData.message;
     const { currentMenu } = contextData.context as {
       currentMenu: BotMenu<Input>;

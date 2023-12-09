@@ -41,8 +41,8 @@ export const home: Record<string, BotMenu<Menu>> = {
         caption:
           '<h3 class="font-semibold">Abstract MH</h3><br/>' +
           'Experimenta una experiencia minimalista y abstracta con este increíble tema para Visual Studio Code (colores pasteles).<br/><br/>' +
-          '<a class="text-c4 font-semibold" href="https://github.com/MHP24/vsc-abstract-theme" target="_blank">Repositorio GitHub</a><br/><br/>' +
-          '<a class="text-c4 font-semibold" href="https://marketplace.visualstudio.com/items?itemName=MiguelHP.Abstract-MH" target="_blank">Accede aquí 👈</a>',
+          '<a class="text-c5 font-semibold" href="https://github.com/MHP24/vsc-abstract-theme" target="_blank">Repositorio GitHub</a><br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://marketplace.visualstudio.com/items?itemName=MiguelHP.Abstract-MH" target="_blank">Accede aquí 👈</a>',
       },
       {
         type: 'image',
@@ -50,8 +50,8 @@ export const home: Record<string, BotMenu<Menu>> = {
         caption:
           '<h3 class="font-semibold">DMiguelo</h3><br/>' +
           'Lleva tu servidor de Discord al siguiente nivel con DMiguelo un bot de entretenimiento y música<br/><br/>' +
-          '<a class="text-c4 font-semibold" href="https://discord.com/oauth2/authorize?client_id=1121947695930691674&permissions=0&scope=bot%20applications.commands" target="_blank">Repositorio GitHub</a><br/><br/>' +
-          '<a class="text-c4 font-semibold" href="https://github.com/MHP24/discord-bot" target="_blank">Accede aquí 👈</a>',
+          '<a class="text-c5 font-semibold" href="https://discord.com/oauth2/authorize?client_id=1121947695930691674&permissions=0&scope=bot%20applications.commands" target="_blank">Repositorio GitHub</a><br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://github.com/MHP24/discord-bot" target="_blank">Accede aquí 👈</a>',
       },
       {
         type: 'image',
@@ -59,8 +59,8 @@ export const home: Record<string, BotMenu<Menu>> = {
         caption:
           "<h3 class='font-semibold'>Miguel's assistant</h3><br/>" +
           '¡Mi compañero de trabajo para asistir a Miguel! disponible en WhatsApp<br/><br/>' +
-          '<a class="text-c4 font-semibold" href="https://github.com/MHP24/whatsapp-bot" target="_blank">Repositorio GitHub</a><br/><br/>' +
-          '<a class="text-c4 font-semibold" href="https://api.whatsapp.com/message/KZ7674WVE4CGP" target="_blank">Accede aquí 👈</a>',
+          '<a class="text-c5 font-semibold" href="https://github.com/MHP24/whatsapp-bot" target="_blank">Repositorio GitHub</a><br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://api.whatsapp.com/message/KZ7674WVE4CGP" target="_blank">Accede aquí 👈</a>',
       },
       {
         type: 'text',

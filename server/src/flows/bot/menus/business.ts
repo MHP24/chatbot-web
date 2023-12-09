@@ -16,7 +16,7 @@ export const business: Record<string, BotMenu<Menu>> = {
           '3) <span class="font-semibold">Sin límite</span> de clientes simultáneos<br/>' +
           '4) Integrable con <span class="font-semibold">cualquier sistema</span><br/><br/>' +
           '¡Pruebalo ahora!<br/>' +
-          '<a class="text-c4" href="https://wa.me/message/KZ7674WVE4CGP1" target="_blank">Click aqui 👈</a>',
+          '<a class="text-c5" href="https://wa.me/message/KZ7674WVE4CGP1" target="_blank">Click aqui 👈</a>',
       },
       {
         type: 'text',
