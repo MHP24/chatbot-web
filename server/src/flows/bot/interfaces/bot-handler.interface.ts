@@ -1,16 +1,13 @@
 import {
   BotContext,
-  BotMenu,
   BotDataResponse,
+  BotEntryResponse,
   FlowEntry,
-  Menu,
   FlowResponse,
 } from 'src/flows/types';
 
 export interface BotEntryHandler {
-  handler: (
-    ctx: FlowEntry<BotContext>,
-  ) => BotMenu<Menu> | Promise<BotMenu<Menu>>;
+  handler: (ctx: FlowEntry<BotContext>) => Promise<BotEntryResponse>;
 }
 
 export interface BotOutputHandler {

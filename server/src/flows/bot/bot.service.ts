@@ -69,12 +69,12 @@ export class BotService {
     // * On next messages already having a context...
 
     // * Handling from context
-    const inputHandling = await this.entriesService.handler(data);
+    const { menu, equivalentMessage } = await this.entriesService.handler(data);
 
     // * Check if have to do something, (not in option, input)
     const { type, response, timestamp } = await this.outputsService.handler({
       chatId,
-      menu: inputHandling,
+      menu,
     });
 
     const nextMenu = response as BotMenu<Input | Option>;
@@ -91,7 +91,13 @@ export class BotService {
     await this.redisService.update<BotContext>(
       `chat:${chatId}`,
       'context.bot',
-      buildContext(bot, message, nextMenu, clientTimestamp, timestamp),
+      buildContext(
+        bot,
+        { ...message, equivalentMessage },
+        nextMenu,
+        clientTimestamp,
+        timestamp,
+      ),
     );
 
     return {
