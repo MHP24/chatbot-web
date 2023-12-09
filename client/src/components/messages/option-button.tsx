@@ -16,8 +16,8 @@ export const OptionButton: FC<Props> = ({ label, redirect }) => {
   return (
     <button
       onClick={onClick}
-      className='border-t-2 border-c2 bg-c2 hover:bg-c4 hover:text-c2 rounded-lg transition-all delay-75
-        w-full m-auto p-2 text-c4 font-semibold'
+      className='bg-c2 hover:opacity-80 hover:bg-c2 rounded-xl
+        w-full m-auto py-2 p-1 text-c5 border-[1px] border-c6'
     >
       {label}
     </button>

@@ -6,15 +6,13 @@ export default {
   ],
   theme: {
     extend: {
-      aspectRatio: {
-        '10/16': '8/16'
-      },
       colors: {
-        'c1': '#FFFFFF',
-        'c2': '#EAEEF3',
+        'c1': '#272727',
+        'c2': '#404040',
         'c3': '#000000',
-        'c4': '#2563EB',
-        'c4-hover': '#104FBD',
+        'c4': '#5c5a5a',
+        'c5': '#FFFFFF',
+        'c6': '#383838',
         'online': '#22C55E',
         'offline': '#EF4444',
         'away': '#EAB308'

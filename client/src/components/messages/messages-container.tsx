@@ -8,7 +8,7 @@ interface Props {
 
 export const MessagesContainer: FC<Props> = ({ messages }) => {
   return (
-    <ul className="flex flex-col gap-6 w-full h-full m-auto p-4">
+    <ul className="flex flex-col gap-2 w-full h-full m-auto p-4">
       {
         messages.map((message, i) => (
           <li key={`message-${i}`}>
