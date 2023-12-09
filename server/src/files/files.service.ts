@@ -5,7 +5,10 @@ import path from 'path';
 @Injectable()
 export class FilesService {
   findOneStaticFile(folder: string, fileName: string) {
-    const filePath = path.join(__dirname, `../../static/${folder}/${fileName}`);
+    const filePath = path.join(
+      __dirname,
+      `../../static/public/${folder}/${fileName}`,
+    );
     if (!existsSync(filePath))
       throw new NotFoundException(`File: ${fileName} not found`);
 

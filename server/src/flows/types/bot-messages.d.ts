@@ -8,6 +8,7 @@ export type BotMessageType =
 export type Image = {
   type: 'image';
   image: string;
+  caption: string;
 };
 export type Text = {
   type: 'text';
