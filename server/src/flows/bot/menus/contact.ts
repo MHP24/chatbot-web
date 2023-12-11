@@ -35,14 +35,16 @@ export const contact: Record<string, BotMenu<Menu>> = {
 
   send: {
     type: 'action',
-    header:
-      '¡Muchas gracias por tu tiempo!\n Tus datos son: Correo electrónico: $0 \nAsunto: $1',
+    header: '',
     body: [
       {
         type: 'text',
         text: 'Miguel se pondrá en contacto a la brevedad posible',
       },
-      { type: 'text', text: '¿Necesitas algo más?' },
+      {
+        type: 'text',
+        text: '¿Necesitas algo más? <br/> Puedes seguir navegando a través del menú de opciones 👇',
+      },
     ],
     data: {
       action: {

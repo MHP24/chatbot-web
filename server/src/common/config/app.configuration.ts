@@ -1,5 +1,6 @@
 export const appConfig = () => ({
   port: +process.env.PORT,
+  serverUrl: process.env.SERVER_URL,
   redisHost: process.env.REDIS_HOST,
   redisPort: +process.env.REDIS_PORT,
   defaultFlow: process.env.DEFAULT_FLOW,

@@ -24,6 +24,10 @@ export type OnTransfer = {
   name?: string
 }
 
+export type OnTimeout = {
+  reason: string
+}
+
 export type OnClose = {
   reason: string
   title: string

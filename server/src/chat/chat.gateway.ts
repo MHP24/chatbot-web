@@ -81,8 +81,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   emitTimeout(args: OnTimeout) {
-    const { chatId, message } = args;
-    this.wss.to(chatId).emit('timeout', { message });
+    const { chatId, reason } = args;
+    this.wss.to(chatId).emit('timeout', { reason });
   }
 
   emitLoad(args: OnLoad) {

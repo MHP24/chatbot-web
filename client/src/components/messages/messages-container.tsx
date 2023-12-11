@@ -1,15 +1,18 @@
-import { InteractiveMessage, TextMessage } from '.'
-import { useChat } from '../../hooks'
-import { type Option } from '../../types'
+import { type FC } from 'react'
+import { BodyMessages, InteractiveMessage, TextMessage } from '.'
+import { type Text, type Option, type Message } from '../../types'
 
-export const MessagesContainer = () => {
-  const { messages } = useChat()
+interface Props {
+  messages: Message[]
+}
+
+export const MessagesContainer: FC<Props> = ({ messages }) => {
   return (
-    <ul className="flex flex-col gap-6 w-full h-full m-auto p-4">
+    <ul className="flex flex-col gap-2 w-full h-full m-auto p-4">
       {
         messages.map((message, i) => (
           <li key={`message-${i}`}>
-            {/* For client messages only */}
+
             {
               message.side === 'client' && (
                 <TextMessage
@@ -20,50 +23,29 @@ export const MessagesContainer = () => {
               )
             }
 
-            {/* For system messages */}
-
-            {/* Text messages header content */}
             {
-              message.side === 'system' && message.header &&
-                (
+              message.side === 'system' && (
+                <>
                   <TextMessage
                     side={message.side}
                     text={message.header}
                     timestamp={message.timestamp}
                   />
-                )
-            }
 
-            {/* Body from system message */}
-            {
-              message.side === 'system' && message.body && (
-                <div className='my-4'>
-                  {message.body
-                    .slice(0, message.type === 'option' ? -1 : message.body.length)
-                    .map(
-                      ({ text }, j) =>
-                        text && (
-                          <TextMessage
-                            key={`message-${i}-${j}`}
-                            side={message.side}
-                            text={text}
-                            timestamp={message.timestamp}
-                          />
-                        )
-                    )}
-                </div>
-              )
-            }
+                  {<BodyMessages message={message} i={i}/>}
 
-            {/* Option messages (buttons) */}
-            {
-              message.side === 'system' &&
-              message.type === 'option' &&
-              (
-                <InteractiveMessage
-                  options={(message.data as Option).option}
-                  header={message.body ? message.body.at(-1)?.text : undefined}
-                />
+                  {message.type === 'option' && (
+                    <InteractiveMessage
+                      options={(message.data as Option).option}
+                      header={
+                        message.body &&
+                        message.body.slice(-1)?.[0]?.type === 'text'
+                          ? (message.body.slice(-1)?.[0] as Text).text
+                          : undefined
+                      }
+                    />
+                  )}
+                </>
               )
             }
 

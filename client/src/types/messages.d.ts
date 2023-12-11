@@ -7,6 +7,7 @@ export type BotMessageType =
 export type Image = {
   type: 'image'
   image: string
+  caption: string
 }
 export type Text = {
   type: 'text'
@@ -20,6 +21,8 @@ export type Audio = {
   type: 'audio'
   audio: string
 }
+
+export type BotBodyMessage = Image | Text | Video | Audio
 
 export type BotMessage = {
   side: 'system'

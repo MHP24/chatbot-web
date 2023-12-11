@@ -4,12 +4,12 @@ import App from './App.tsx'
 import './index.css'
 import { ChatProvider, WidgetProvider } from './context/'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
-  <ChatProvider>
-    <WidgetProvider>
-      <App />
-    </WidgetProvider>
-  </ChatProvider>
-  // </React.StrictMode>
+ReactDOM.createRoot(document.getElementById('chat_wrapper')!).render(
+  <React.StrictMode>
+    <ChatProvider>
+      <WidgetProvider>
+        <App />
+      </WidgetProvider>
+    </ChatProvider>
+  </React.StrictMode>
 )

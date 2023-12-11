@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FlowEntry, BotContext, BotMenu, Menu, Option } from 'src/flows/types';
-import { FullBotMenu, mainMenu } from '../../menus/main';
+import {
+  FlowEntry,
+  BotContext,
+  BotMenu,
+  Option,
+  BotEntryResponse,
+} from 'src/flows/types';
+import { mainMenu } from '../../menus/main';
 import Fuse from 'fuse.js';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { deleteVariable } from 'src/flows/helpers';
@@ -9,7 +15,7 @@ import { deleteVariable } from 'src/flows/helpers';
 export class OptionService {
   variations: Record<
     string,
-    (data: FlowEntry<BotContext>) => Promise<BotMenu<Menu>>
+    (data: FlowEntry<BotContext>) => Promise<BotEntryResponse>
   >;
 
   constructor(private readonly redisService: RedisService) {
@@ -19,7 +25,7 @@ export class OptionService {
   }
 
   // * Main handler for options
-  async handleOption(data: FlowEntry<BotContext>): Promise<BotMenu<Menu>> {
+  async handleOption(data: FlowEntry<BotContext>): Promise<BotEntryResponse> {
     const { context } = data;
     const currentMenu = context.currentMenu as BotMenu<Option>;
 
@@ -32,16 +38,16 @@ export class OptionService {
   }
 
   // * Without variant
-  handleStaticOption(data: FlowEntry<BotContext>): BotMenu<Menu> {
+  handleStaticOption(data: FlowEntry<BotContext>): BotEntryResponse {
     const { message, context } = data;
-    const currentMenu = context.currentMenu as BotMenu<Option>;
+    const currentMenu = context.currentMenu;
 
     const selectionByOption = this.getMenuBySelection(
-      mainMenu,
+      context.currentMenu as BotMenu<Option>,
       message.message,
     );
 
-    if (selectionByOption) return selectionByOption;
+    if (selectionByOption.menu) return selectionByOption;
 
     const selectionBySearch = this.getMenuBySearch(
       data.context.currentMenu as BotMenu<Option>,
@@ -49,20 +55,28 @@ export class OptionService {
     );
 
     if (selectionBySearch) {
-      return this.getMenuBySelection(mainMenu, selectionBySearch.redirect);
+      const { menu } = this.getMenuBySelection(
+        context.currentMenu as BotMenu<Option>,
+        selectionBySearch.redirect,
+      );
+      return {
+        menu,
+      };
     }
 
     return {
-      ...currentMenu,
-      header:
-        'No he podido entender tu respuesta, selecciona alguna de las opciones:',
+      menu: {
+        ...currentMenu,
+        header:
+          'No he podido entender tu respuesta, selecciona alguna de las opciones:',
+      },
     };
   }
 
   // * Variations...
   async handleDynamicOption(
     data: FlowEntry<BotContext>,
-  ): Promise<BotMenu<Menu>> {
+  ): Promise<BotEntryResponse> {
     const {
       context,
       message: { message },
@@ -75,8 +89,10 @@ export class OptionService {
 
     if (!selection) {
       return {
-        ...menu,
-        header: 'Selecciona una opción válida',
+        menu: {
+          ...menu,
+          header: 'Selecciona una opción válida',
+        },
       };
     }
 
@@ -84,7 +100,6 @@ export class OptionService {
       variable: { destination, ...rest },
     } = selection;
 
-    // TODO: move this to helper
     // * Add the new variable obtained from selection to the context
     await this.redisService.update<BotContext>(
       `chat:${data.chatId}`,
@@ -99,17 +114,29 @@ export class OptionService {
       },
     );
 
-    return this.getMenuBySelection(mainMenu, destination);
+    return this.getMenuBySelection(
+      data.context.currentMenu as BotMenu<Option>,
+      destination,
+    );
   }
 
   // * Helpers to get data from menus
   getMenuBySelection(
-    menu: FullBotMenu | BotMenu<Menu>,
+    contextMenu: BotMenu<Option>,
     option: string,
-  ): BotMenu<Menu> {
-    return option.split(':').reduce((output, key) => {
+  ): BotEntryResponse {
+    const menu = option.split(':').reduce((output, key) => {
       return output[key];
-    }, menu);
+    }, mainMenu);
+
+    const equivalentMessage = contextMenu.data.option.find(
+      ({ redirect }) => redirect === option,
+    )?.label;
+
+    return {
+      menu,
+      equivalentMessage,
+    };
   }
 
   getMenuBySearch(

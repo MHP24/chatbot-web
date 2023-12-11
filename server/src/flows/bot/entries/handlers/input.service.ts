@@ -1,5 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FlowEntry, BotContext, BotMenu, Menu, Input } from '../../../types';
+import {
+  FlowEntry,
+  BotContext,
+  BotMenu,
+  Menu,
+  Input,
+  BotEntryResponse,
+} from '../../../types';
 import { mainMenu } from '../../menus/main';
 import { RedisService } from 'src/providers/cache/redis.service';
 import { deleteVariable } from 'src/flows/helpers';
@@ -10,7 +17,7 @@ export class InputService {
 
   async handleInput(
     contextData: FlowEntry<BotContext>,
-  ): Promise<BotMenu<Menu>> {
+  ): Promise<BotEntryResponse> {
     const { message } = contextData.message;
     const { currentMenu } = contextData.context as {
       currentMenu: BotMenu<Input>;
@@ -22,8 +29,10 @@ export class InputService {
     // * Wrong answers send the same question again with an error message
     if (input.regex && !message.match(regExp)) {
       return {
-        ...currentMenu,
-        header: currentMenu.data.input.errorMessage,
+        menu: {
+          ...currentMenu,
+          header: currentMenu.data.input.errorMessage,
+        },
       };
     }
 
@@ -45,10 +54,12 @@ export class InputService {
     );
 
     // * Sends the next menu to handle using the output handler
-    return input.onValid.redirect
-      .split(':')
-      .reduce((output: BotMenu<Menu>, key: string) => {
-        return output[key];
-      }, mainMenu);
+    return {
+      menu: input.onValid.redirect
+        .split(':')
+        .reduce((output: BotMenu<Menu>, key: string) => {
+          return output[key];
+        }, mainMenu),
+    };
   }
 }

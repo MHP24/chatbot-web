@@ -1,11 +1,11 @@
-export const getVariable = (
+export const getVariable = <T>(
   arg: string,
   variables: Array<{
     reference: string;
     value: unknown;
   }>,
-): unknown | undefined => {
-  return variables.find(({ reference }) => reference === arg)?.value;
+): T | undefined => {
+  return variables.find(({ reference }) => reference === arg)?.value as T;
 };
 
 export const deleteVariable = (

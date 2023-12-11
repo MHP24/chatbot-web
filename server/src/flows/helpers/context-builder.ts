@@ -3,7 +3,7 @@ import { BotContext, BotMenu, Input, Option } from '../types';
 
 export const buildContext = (
   context: BotContext | undefined,
-  clientMessage: EntryClientMessage,
+  clientMessage: { equivalentMessage?: string } & EntryClientMessage,
   botResponse: BotMenu<Input | Option>,
   clientTimestamp: number,
   botTimestamp: number,
@@ -21,11 +21,6 @@ export const buildContext = (
         },
       ],
       history: [
-        {
-          side: 'client',
-          content: clientMessage,
-          timestamp: clientTimestamp,
-        },
         {
           side: 'bot',
           content: botResponse,
@@ -46,7 +41,7 @@ export const buildContext = (
         side: 'client' as ChatSide,
         content: {
           origin: clientMessage.origin as MessageOrigin,
-          message: clientMessage.message,
+          message: clientMessage.equivalentMessage ?? clientMessage.message,
         },
         timestamp: clientTimestamp,
       },

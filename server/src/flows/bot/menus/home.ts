@@ -3,7 +3,7 @@ import { BotMenu, Menu } from '../../types';
 export const home: Record<string, BotMenu<Menu>> = {
   start: {
     type: 'option',
-    header: '¡Hola! Soy el asistente virtual de Miguel',
+    header: '¡Hola! Soy el asistente virtual de Miguel  👾',
     body: [{ type: 'text', text: '¿En qué puedo ayudarte hoy?' }],
     data: {
       option: [
@@ -24,30 +24,10 @@ export const home: Record<string, BotMenu<Menu>> = {
           redirect: 'home:about',
         },
         {
-          label: 'Prueba',
-          redirect: 'home:test',
-        },
-        {
           label: 'Contactar con Miguel',
           redirect: 'contact:start',
         },
       ],
-    },
-  },
-
-  test: {
-    type: 'input',
-    header: 'Ingrese DNI',
-    body: [],
-    data: {
-      input: {
-        errorMessage: 'DNI Inválido',
-        reference: 'dni',
-        regex: null,
-        onValid: {
-          redirect: 'dynamic:products',
-        },
-      },
     },
   },
 
@@ -57,19 +37,34 @@ export const home: Record<string, BotMenu<Menu>> = {
     body: [
       {
         type: 'image',
-        image: 'https://mg-hp.com/msc/logo.jpg',
+        image: `${process.env.SERVER_URL}/files/static/img/abstract-mh.jpg`,
+        caption:
+          '<h3 class="font-semibold">Abstract MH</h3><br/>' +
+          'Experimenta una experiencia minimalista y abstracta con este increíble tema para Visual Studio Code (colores pasteles).<br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://github.com/MHP24/vsc-abstract-theme" target="_blank">Repositorio GitHub</a><br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://marketplace.visualstudio.com/items?itemName=MiguelHP.Abstract-MH" target="_blank">Accede aquí 👈</a>',
       },
       {
         type: 'image',
-        image: 'https://mg-hp.com/msc/logo.jpg',
+        image: `${process.env.SERVER_URL}/files/static/img/discord-bot.jpg`,
+        caption:
+          '<h3 class="font-semibold">DMiguelo</h3><br/>' +
+          'Lleva tu servidor de Discord al siguiente nivel con DMiguelo un bot de entretenimiento y música<br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://discord.com/oauth2/authorize?client_id=1121947695930691674&permissions=0&scope=bot%20applications.commands" target="_blank">Repositorio GitHub</a><br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://github.com/MHP24/discord-bot" target="_blank">Accede aquí 👈</a>',
       },
       {
         type: 'image',
-        image: 'https://mg-hp.com/msc/logo.jpg',
+        image: `${process.env.SERVER_URL}/files/static/img/whatsapp-bot.jpg`,
+        caption:
+          "<h3 class='font-semibold'>Miguel's assistant</h3><br/>" +
+          '¡Mi compañero de trabajo para asistir a Miguel! disponible en WhatsApp<br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://github.com/MHP24/whatsapp-bot" target="_blank">Repositorio GitHub</a><br/><br/>' +
+          '<a class="text-c5 font-semibold" href="https://api.whatsapp.com/message/KZ7674WVE4CGP" target="_blank">Accede aquí 👈</a>',
       },
       {
         type: 'text',
-        text: 'Para seguir navegando selecciona alguna de las opciones:',
+        text: 'Puedes seguir navegando a través del menú de opciones 👇',
       },
     ],
     data: {
@@ -104,11 +99,11 @@ export const home: Record<string, BotMenu<Menu>> = {
     body: [
       {
         type: 'text',
-        text: 'Me especializo en:\n• Desarrollo frontend y backend  👨🏻‍💻\n• Mantenimiento y mejora de productos desarrollados a medida  📈\n• Análisis y modelado de soluciones a gran escala  🚀',
+        text: 'Me especializo en:<br/><br/>• Desarrollo frontend y backend  👨🏻‍💻<br/>• Mantenimiento y mejora de productos desarrollados a medida  📈<br/>• Análisis y modelado de soluciones a gran escala  🚀',
       },
       {
         type: 'text',
-        text: 'Para seguir navegando selecciona alguna de las opciones:',
+        text: 'Puedes seguir navegando a través del menú de opciones 👇',
       },
     ],
     data: {
