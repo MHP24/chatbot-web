@@ -14,4 +14,11 @@ export class FilesService {
 
     return filePath;
   }
+
+  getScript(folder: string, fileName: string) {
+    return path.join(
+      __dirname,
+      `../../static/public/scripts/${folder}/${fileName}`,
+    );
+  }
 }

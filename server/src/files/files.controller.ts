@@ -14,4 +14,13 @@ export class FilesController {
   ) {
     return res.sendFile(this.filesService.findOneStaticFile(folder, fileName));
   }
+
+  @Get('/scripts/:folder/:fileName')
+  find(
+    @Res() res: Response,
+    @Param('folder') folder: string,
+    @Param('fileName') fileName: string,
+  ) {
+    return res.sendFile(this.filesService.getScript(folder, fileName));
+  }
 }
