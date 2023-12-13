@@ -1,0 +1,38 @@
+name: publish
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: remote ssh connection
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd ${{ secrets.PROJECT_DIR }}
+            sudo rm -rf ${{ secrets.NAME_PROJECT }}/
+            git clone ${{ secrets.GH_REPOSITORY }}
+            cp client.env ./${{ secrets.NAME_PROJECT }}/client/.env
+            cp server.env ./${{ secrets.NAME_PROJECT }}/server/.env
+            cd ${{ secrets.NAME_PROJECT }}/client
+            yarn
+            yarn build
+            cd ../server
+            yarn
+            yarn prisma:generate
+            yarn prisma:migrate
+            yarn build
+            pm2 delete "${{ secrets.PM2_INSTANCE }}" 2> /dev/null
+            pm2 start npm --name "${{ secrets.PM2_INSTANCE }}" -- run ${{ secrets.PM2_START_COMMAND }}

@@ -1,18 +1,18 @@
 (() => {
-  const targetElement = 'body';
-  const chatHostUrl = 'http://localhost:3001';
+  const chatHostUrl =
+    (document.querySelector('script[data-mhp-url]') || {}).getAttribute(
+      'data-mhp-url',
+    ) || '';
 
   const createElement = (elemObj) => {
     const elem = document.createElement(elemObj.type);
 
-    if (elemObj.attrs) {
-      elemObj.attrs.forEach((attr) => {
-        const completeVal = Array.isArray(attr.val)
-          ? attr.val.join(' ')
-          : attr.val;
-        elem.setAttribute(attr.name, completeVal);
-      });
-    }
+    elemObj.attrs?.forEach((attr) => {
+      const completeVal = Array.isArray(attr.val)
+        ? attr.val.join(' ')
+        : attr.val;
+      elem.setAttribute(attr.name, completeVal);
+    });
 
     return elem;
   };
@@ -34,7 +34,7 @@
           { name: 'id', val: 'chat_wrapper' },
           {
             name: 'style',
-            val: 'width: 500px; position: absolute; bottom: 0; right: 0;',
+            val: 'width: 32rem; position: absolute; bottom: 0; right: 0;',
           },
         ],
       }),
@@ -51,20 +51,12 @@
       }),
     };
 
-    document.body.appendChild(elemDictionary.bundleScript.cloneNode(true));
-
-    if (targetElement === 'body') {
-      document.body.appendChild(elemDictionary.chatWrap.cloneNode(true));
-    } else {
-      document
-        .getElementById(targetElement)
-        .appendChild(elemDictionary.chatWrap.cloneNode(true));
-    }
-
-    document.head.appendChild(elemDictionary.styleSheetLink.cloneNode(true));
+    document.body.appendChild(elemDictionary.bundleScript);
+    (document.getElementById('body') || document.body).appendChild(
+      elemDictionary.chatWrap.cloneNode(true),
+    );
+    document.head.appendChild(elemDictionary.styleSheetLink);
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    appendToDOM();
-  });
+  document.addEventListener('DOMContentLoaded', appendToDOM);
 })();

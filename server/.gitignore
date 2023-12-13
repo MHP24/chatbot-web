@@ -1,4 +1,4 @@
-# compiled output
+# Builds and dependencies
 /dist
 /node_modules
 
@@ -34,6 +34,13 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# etc
+# DB Migrations
+src/providers/prisma/mysql/migrations/*
+
+# Build from client provided as static files
+static/public/scripts/chat/*
+!static/public/scripts/chat/main.js
+
+# Etc
 .env
 /etc
