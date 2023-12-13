@@ -2,7 +2,7 @@ name: publish
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -21,5 +21,18 @@ jobs:
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            cd /root/dev/mhp-chatbot/
+            cd ${{ secrets.PROJECT_DIR }}
+            sudo rm -rf ${{ secrets.NAME_PROJECT }}/
             git clone ${{ secrets.GH_REPOSITORY }}
+            cp client.env ./${{ secrets.NAME_PROJECT }}/client/.env
+            cp server.env ./${{ secrets.NAME_PROJECT }}/server/.env
+            cd ${{ secrets.NAME_PROJECT }}/client
+            yarn
+            yarn build
+            cd ../server
+            yarn
+            yarn prisma:generate
+            yarn prisma:migrate
+            yarn build
+            pm2 delete "${{ secrets.PM2_INSTANCE }}" 2> /dev/null
+            pm2 start npm --name "${{ secrets.PM2_INSTANCE }}" -- run ${{ secrets.PM2_START_COMMAND }}
