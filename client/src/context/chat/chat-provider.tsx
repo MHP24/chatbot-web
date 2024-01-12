@@ -31,7 +31,6 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
 
     // * Events from backend
     if (session.isOnline) {
-      console.log('Events started...')
       on<OnSession>('session', startSession)
       on<OnMessage>('message', receiveMessage)
       on<OnLoad>('load', loadChat)
@@ -50,7 +49,6 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
       const { chatId } = await data.json()
       setTimeout(() => {
         Cookies.set('chat_session', chatId)
-        console.log({ chatId })
         connect(chatId)
       }, time)
     } catch (error) {
