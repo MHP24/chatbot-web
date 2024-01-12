@@ -10,6 +10,7 @@ const INITIAL_STATE: WidgetT = {
 export const WidgetProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(widgetReducer, INITIAL_STATE)
 
+  // * Toggler for widget visualization
   const handleWidget = (arg: boolean) => {
     dispatch({ type: '[Widget] - Handle', payload: arg })
   }

@@ -13,12 +13,16 @@ export const useSocket = (serverUrl: string) => {
   })
   const { socket } = session
 
+  // * On unmount the socket connection will be closed
   useEffect(() => {
     return () => {
       session.socket?.disconnect()
     }
   }, [session])
 
+  // * Connector, the authentication it's optional (used to identify the connection by unique id)
+  // * without focusing on socketId, (id generated and validated by server before connection)
+  // * requires your own business logic to handle the extra header
   const connect = (authentication = '') => {
     const ioSession = io(serverUrl, {
       extraHeaders: {
@@ -37,6 +41,7 @@ export const useSocket = (serverUrl: string) => {
     socket?.disconnect()
   }
 
+  // * Event handlers (listener and emitter)
   const on = <T>(event: string, callback: (data: T) => void) => {
     socket?.on(event, callback)
   }
