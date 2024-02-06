@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.TOKEN_CD }}
         
       - name: Create .env file for client
-      - run: |
+        run: |
           echo "${{ secrets.ENV_CLIENT }}" > client/.env   
 
       - name: Build the Docker image
