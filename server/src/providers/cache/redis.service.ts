@@ -17,7 +17,11 @@ export class RedisService {
   }
 
   private async connect() {
-    this.redisClient = await createClient()
+    this.redisClient = await createClient({
+      url: `redis://${this.configService.get(
+        'REDIS_HOST',
+      )}:${this.configService.get('REDIS_PORT')}`,
+    })
       .on('error', (err) => this.logger.error(err))
       .connect();
   }
