@@ -22,13 +22,14 @@ const INITIAL_STATE: ChatState = {
 export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE)
   const { session, connect, disconnect, on, emit } = useSocket(import.meta.env.VITE_SERVER_URL)
-
+  // * Initial session handling to set events on connection ready
   useEffect(() => {
     dispatch({
       type: '[Session] - Set online status',
       payload: session.isOnline
     })
 
+    // * Events from backend
     if (session.isOnline) {
       on<OnSession>('session', startSession)
       on<OnMessage>('message', receiveMessage)
@@ -38,19 +39,24 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [session])
 
+  // * Chat id creation using REST service
   const createChat = async (time: number = 2000) => {
-    const data = await fetch(
-      import.meta.env.VITE_SERVER_URL +
-        `/chats/request?chatId=${Cookies.get('chat_session')}`
-    )
-    const { chatId } = await data.json()
-    setTimeout(() => {
-      Cookies.set('chat_session', chatId)
-
-      connect(chatId)
-    }, time)
+    try {
+      const data = await fetch(
+        import.meta.env.VITE_SERVER_URL +
+          `/chats/request?chatId=${Cookies.get('chat_session')}`
+      )
+      const { chatId } = await data.json()
+      setTimeout(() => {
+        Cookies.set('chat_session', chatId)
+        connect(chatId)
+      }, time)
+    } catch (error) {
+      return null
+    }
   }
 
+  // * Manual connection setter when it's needed
   const establishConnection = async () => {
     try {
       if (!state.isOnline && !state.isClosed) {
@@ -61,6 +67,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   }
 
+  // * On session confirmed by server
   const startSession = (sessionContext: OnSession) => {
     Cookies.set('chat_session', sessionContext.chatId)
     dispatch({
@@ -69,6 +76,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * Messages from server
   const receiveMessage = (onMessage: OnMessage) => {
     const { message } = onMessage
     dispatch({
@@ -77,6 +85,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * Send messages using input text field
   const sendInputMessage = (message: string) => {
     emit('message', {
       origin: 'input',
@@ -92,6 +101,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * Send messages using buttons
   const sendOptionMessage = (label: string, redirect: string) => {
     emit('message', {
       origin: 'option',
@@ -107,6 +117,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * On chat identified from server that receives all messages
   const loadChat = (data: OnLoad) => {
     dispatch({
       type: '[Chat] - Load',
@@ -114,6 +125,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * Chat close using socket controller
   const closeChat = () => {
     disconnect()
     dispatch({
@@ -126,6 +138,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * On timeout detected from backend
   const timeoutChat = (data: OnTimeout) => {
     dispatch({
       type: '[Chat] - Close',
@@ -138,6 +151,7 @@ export const ChatProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  // * If a recent chat was closed and the user requires create another instance
   const createNewChat = async () => {
     await createChat(0)
   }

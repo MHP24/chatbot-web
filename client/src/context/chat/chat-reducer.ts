@@ -1,4 +1,10 @@
-import { type OnLoad, type Message, type OnSession, type ClientMessage, type BotMessage } from '../../types'
+import {
+  type OnLoad,
+  type Message,
+  type OnSession,
+  type ClientMessage,
+  type BotMessage
+} from '../../types'
 import { type ChatState } from '../../types/chat'
 
 type Action = {
@@ -54,7 +60,6 @@ export const chatReducer = (state: ChatState, action: Action): ChatState => {
             message: action.payload.message,
             timestamp: Number(new Date())
           }
-
         ]
       }
 
