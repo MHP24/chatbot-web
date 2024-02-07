@@ -19,17 +19,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.TOKEN_CD }}
         
-      - name: Create .env file for client
-        run: |
-          echo "${{ secrets.ENV_CLIENT }}" > client/.env   
-
       - name: Build the Docker image
         run: |
-          docker build --build-arg \
-          VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }} \
-          VITE_BASE_BUILD_URL=${{ secrets.VITE_BASE_BUILD_URL }} \
-           . --tag ${{ secrets.DOCKER_PRODUCTION_IMAGE }}
-          docker push ${{ secrets.DOCKER_PRODUCTION_IMAGE }}  
+          docker build --build-arg VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }} \
+                       --build-arg VITE_BASE_BUILD_URL=${{ secrets.VITE_BASE_BUILD_URL }} \
+                       --tag ${{ secrets.DOCKER_PRODUCTION_IMAGE }} .
+          docker push ${{ secrets.DOCKER_PRODUCTION_IMAGE }} 
 
   deploy:
     needs: create-docker-image
