@@ -4,6 +4,12 @@ WORKDIR /client/app
 COPY . .
 WORKDIR /client/app/client
 RUN yarn
+# Server url from backend
+ARG VITE_SERVER_URL
+ENV VITE_SERVER_URL=$VITE_SERVER_URL
+# Url to handle static files
+ARG VITE_BASE_BUILD_URL
+ENV VITE_BASE_BUILD_URL=$VITE_BASE_BUILD_URL
 RUN yarn build
 
 # Server building
