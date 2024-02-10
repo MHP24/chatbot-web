@@ -4,7 +4,7 @@ import chatLogo from '../../assets/svgs/chat.svg'
 export const WidgetButton = () => {
   const { handleWidget, isOpen } = useWidget()
   const { establishConnection } = useChat()
-  const animation = !isOpen ? 'fadeIn' : 'fadeOut'
+  const animation = !isOpen ? 'fadeIn__light' : 'fadeOut__light'
 
   const onClick = async () => {
     handleWidget(true)

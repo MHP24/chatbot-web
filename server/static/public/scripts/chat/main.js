@@ -34,7 +34,7 @@
           { name: 'id', val: 'chat_wrapper' },
           {
             name: 'style',
-            val: 'width: 32rem; position: fixed; bottom: 0; right: 0;',
+            val: 'width: 32rem; position: fixed; z-index: 10; bottom: 0; right: 0;',
           },
         ],
       }),
