@@ -53,3 +53,14 @@
     opacity: 1;
   }
 }
+
+@keyframes fadeOut__light {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    z-index: -1;
+  }
+}
