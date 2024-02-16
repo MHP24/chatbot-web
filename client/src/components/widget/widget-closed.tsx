@@ -11,7 +11,7 @@ export const WidgetClosed = () => {
       <button className='h-25 w-25 absolute top-2 right-2'
         onClick={() => { handleWidget(false) }}
       >
-        <img src={arrowDown} className='h-full w-full'/>
+        <img src={arrowDown} className='h-full w-full' alt='minimize chat'/>
       </button>
       <div className="flex flex-col gap-10 items-center">
         <p

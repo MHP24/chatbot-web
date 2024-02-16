@@ -16,8 +16,10 @@ export const WidgetButton = () => {
       hover:scale-110 hover:rotate-12 duration-75
      aspect-square p-3 rounded-full bg-c4 select-none ${animation} z-10`}
     onClick={onClick}
+    name='open chat'
+    aria-label='open chat'
     >
-      <img src={chatLogo}/>
+      <img src={chatLogo} alt='open chat'/>
     </button>
   )
 }

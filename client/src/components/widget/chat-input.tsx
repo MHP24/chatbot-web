@@ -32,7 +32,7 @@ export const ChatInput = () => {
             p-3 text-md placeholder:opacity-60"
         />
         <button type='submit' className='w-12 p-2'>
-          <img src={sendLogo} className='w-10 h-10 aspect-square'/>
+          <img src={sendLogo} className='w-10 h-10 aspect-square' alt='send'/>
         </button>
       </div>
 
