@@ -19,7 +19,7 @@ export const WidgetButton = () => {
     name='open chat'
     aria-label='open chat'
     >
-      <img src={chatLogo} alt='open chat'/>
+      <img src={chatLogo} alt='open chat' className='w-8 h-8'/>
     </button>
   )
 }
