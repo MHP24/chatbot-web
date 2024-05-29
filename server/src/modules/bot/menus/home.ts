@@ -37,7 +37,7 @@ export const home: Record<string, BotMenu<Menu>> = {
     body: [
       {
         type: 'image',
-        image: `${process.env.SERVER_URL}/files/static/img/abstract-mh.jpg`,
+        image: `${process.env.SERVER_URL}/files/img/abstract-mh.jpg`,
         caption:
           '<h3 class="font-semibold">Abstract MH</h3><br/>' +
           'Experimenta una experiencia minimalista y abstracta con este increíble tema para Visual Studio Code (colores pasteles).<br/><br/>' +
@@ -46,7 +46,7 @@ export const home: Record<string, BotMenu<Menu>> = {
       },
       {
         type: 'image',
-        image: `${process.env.SERVER_URL}/files/static/img/discord-bot.jpg`,
+        image: `${process.env.SERVER_URL}/files/img/discord-bot.jpg`,
         caption:
           '<h3 class="font-semibold">DMiguelo</h3><br/>' +
           'Lleva tu servidor de Discord al siguiente nivel con DMiguelo un bot de entretenimiento y música<br/><br/>' +
@@ -55,7 +55,7 @@ export const home: Record<string, BotMenu<Menu>> = {
       },
       {
         type: 'image',
-        image: `${process.env.SERVER_URL}/files/static/img/whatsapp-bot.jpg`,
+        image: `${process.env.SERVER_URL}/files/img/whatsapp-bot.jpg`,
         caption:
           "<h3 class='font-semibold'>Miguel's assistant</h3><br/>" +
           '¡Mi compañero de trabajo para asistir a Miguel! disponible en WhatsApp<br/><br/>' +

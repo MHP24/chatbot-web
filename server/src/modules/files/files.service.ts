@@ -1,24 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { existsSync } from 'fs';
 import path from 'path';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { GetFileDto } from './dto';
 
 @Injectable()
 export class FilesService {
-  findOneStaticFile(folder: string, fileName: string) {
+  getFile({ directory, file }: GetFileDto) {
     const filePath = path.join(
       __dirname,
-      `../../static/public/${folder}/${fileName}`,
+      `../../../static/${directory}/${file}`,
     );
     if (!existsSync(filePath))
-      throw new NotFoundException(`File: ${fileName} not found`);
+      throw new NotFoundException(`File: ${file} not found`);
 
     return filePath;
-  }
-
-  getScript(folder: string, fileName: string) {
-    return path.join(
-      __dirname,
-      `../../static/public/scripts/${folder}/${fileName}`,
-    );
   }
 }

@@ -26,7 +26,7 @@ export const buildContext = (
       ],
       history: [
         {
-          side: 'bot',
+          side: ChatSide.bot,
           content: botResponse,
           timestamp: botTimestamp,
         },
