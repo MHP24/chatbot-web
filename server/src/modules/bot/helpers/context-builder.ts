@@ -1,8 +1,4 @@
-import { ChatSide } from 'src/modules/chat/types/chat';
-import {
-  EntryClientMessage,
-  MessageOrigin,
-} from 'src/modules/chat/types/message';
+import { ChatSide, EntryClientMessage, MessageOrigin } from '../../chat/types';
 import { BotContext, BotMenu, Input, Option } from '../types';
 
 export const buildContext = (

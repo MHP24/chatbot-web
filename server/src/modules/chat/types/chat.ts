@@ -2,9 +2,9 @@ import { BotContext } from '../../bot/types';
 import { Flow } from '../../flows/types';
 
 export enum ChatSide {
-  client,
-  bot,
-  agent,
+  client = 'client',
+  bot = 'bot',
+  agent = 'agent',
 }
 
 export type Chat = {

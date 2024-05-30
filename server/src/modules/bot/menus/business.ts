@@ -7,7 +7,7 @@ export const business: Record<string, BotMenu<Menu>> = {
     body: [
       {
         type: 'image',
-        image: `${process.env.SERVER_URL}/files/static/img/whatsapp-offer.png`,
+        image: `${process.env.SERVER_URL}/img/whatsapp-offer.png`,
         caption:
           '<h3 class="font-semibold">Asistente virtual WhatsApp</h3><br/>' +
           '<p class="font-semibold">Incluye</p><br/>' +
