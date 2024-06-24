@@ -18,6 +18,7 @@ import {
   OnTimeout,
   OnLoad,
 } from './types';
+import { extractChatId } from './helpers';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -52,19 +53,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // * Listeners
   async handleConnection(client: Socket) {
-    const chatId = client.handshake.headers.authentication as string;
-    return await this.chatService.onConnect(client, chatId);
+    return await this.chatService.onConnect(client, extractChatId(client));
   }
 
   handleDisconnect(client: Socket) {
-    const chatId = client.handshake.headers.authentication as string;
-    this.chatService.onDisconnect(chatId);
+    this.chatService.onDisconnect(extractChatId(client));
   }
 
   @SubscribeMessage('message')
   async onMessage(client: Socket, payload: EntryClientMessage) {
-    const chatId = client.handshake.headers.authentication as string;
-    return await this.chatService.onMessage(chatId, payload);
+    return await this.chatService.onMessage(extractChatId(client), payload);
   }
 
   // * Emitters

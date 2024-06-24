@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Subject } from 'rxjs';
-import {
-  OnSession,
-  OnMessage,
-  OnClose,
-  OnTimeout,
-  OnLoad,
-} from '../types';
+import { OnSession, OnMessage, OnClose, OnTimeout, OnLoad } from '../types';
 
 @Injectable()
 export class EventsService {
