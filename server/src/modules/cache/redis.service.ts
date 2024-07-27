@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { createClient } from 'redis';
+import { envs } from '../../common/config';
 
 @Injectable()
 export class RedisService {
   private readonly logger = new Logger('RedisService');
   private redisClient;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor() {
     /* Connection instance with redis 
       running from Docker container 
     */
@@ -18,9 +18,7 @@ export class RedisService {
 
   private async connect() {
     this.redisClient = await createClient({
-      url: `redis://${this.configService.get(
-        'REDIS_HOST',
-      )}:${this.configService.get('REDIS_PORT')}`,
+      url: `redis://${envs.redisHost}:${envs.redisPort}`,
     })
       .on('error', (err) => this.logger.error(err))
       .connect();
@@ -28,9 +26,7 @@ export class RedisService {
 
   async get<T>(key: string): Promise<T | undefined> {
     try {
-      return await this.redisClient.json.get(
-        `${this.configService.get('CHAT_INSTANCE')}:${key}`,
-      );
+      return await this.redisClient.json.get(`${envs.chatInstance}:${key}`);
     } catch (error) {
       this.logger.error(`GET: ${error}`);
       return undefined;
@@ -40,7 +36,7 @@ export class RedisService {
   async set<T>(key: string, value: T) {
     try {
       return await this.redisClient.json.set(
-        `${this.configService.get('CHAT_INSTANCE')}:${key}`,
+        `${envs.chatInstance}:${key}`,
         '.',
         value,
       );
@@ -52,7 +48,7 @@ export class RedisService {
   async update<T>(key: string, prop: string, value: T) {
     try {
       return await this.redisClient.json.set(
-        `${this.configService.get('CHAT_INSTANCE')}:${key}`,
+        `${envs.chatInstance}:${key}`,
         `.${prop}`,
         value,
       );
@@ -63,7 +59,7 @@ export class RedisService {
 
   async delete(key: string) {
     try {
-      this.redisClient.del(`${this.configService.get('CHAT_INSTANCE')}:${key}`);
+      this.redisClient.del(`${envs.chatInstance}:${key}`);
     } catch (error) {
       this.logger.error(`DELETE: ${error}`);
     }

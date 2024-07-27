@@ -1,2 +1,1 @@
-export * from './app.configuration';
-export * from './joi.configuration';
+export { envs } from './app.config';

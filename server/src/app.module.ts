@@ -1,7 +1,5 @@
 // * Config
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { JoiValidationSchema, appConfig } from './common/config';
 
 // * Database providers modules
 import { RedisModule } from './modules/cache/redis.module';
@@ -17,18 +15,6 @@ import { BotModule } from './modules/bot/bot.module';
 import { FilesModule } from './modules/files/files.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      load: [appConfig],
-      validationSchema: JoiValidationSchema,
-    }),
-    RedisModule,
-    PrismaModule,
-    ChatModule,
-    BotModule,
-    FilesModule,
-  ],
-  controllers: [],
-  providers: [],
+  imports: [RedisModule, PrismaModule, ChatModule, BotModule, FilesModule],
 })
 export class AppModule {}

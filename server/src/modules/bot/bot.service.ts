@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { envs } from '../../common/config';
 // * Menus
 import { mainMenu } from './menus/main';
 // * Services
@@ -23,7 +23,6 @@ import { getMenuBySelection, buildContext } from './helpers';
 @Injectable()
 export class BotService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly entriesService: EntriesService,
     private readonly outputsService: OutputsService,
@@ -36,8 +35,8 @@ export class BotService {
     // * On new message starting this flow
     if (!context) {
       const defaultMessage: EntryClientMessage = {
-        origin: this.configService.get('DEFAULT_FLOW_KEY_TYPE'),
-        message: this.configService.get('DEFAULT_FLOW_KEY'),
+        origin: envs.defaultFlowKeyType,
+        message: envs.defaultFlowKey,
       };
 
       //  * Extract the first selection to start the flow

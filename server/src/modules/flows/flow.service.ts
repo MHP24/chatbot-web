@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 // * Services
 import { BotService } from '../bot/bot.service';
 import { RedisService } from '../cache/redis.service';
@@ -8,6 +7,7 @@ import { EventsService } from '../chat/events/events.service';
 import { FlowEntry, FlowResponse, BotContext } from '../bot/types';
 import { Chat } from '../chat/types/chat';
 import { EntryClientMessage } from '../chat/types/message';
+import { envs } from '../../common/config';
 
 @Injectable()
 export class FlowService {
@@ -19,7 +19,6 @@ export class FlowService {
   >;
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly botService: BotService,
     private readonly eventsService: EventsService,
@@ -88,7 +87,7 @@ export class FlowService {
         chatId,
         startedAt: Number(new Date()),
         context: {
-          currentFlow: this.configService.get('DEFAULT_FLOW'),
+          currentFlow: envs.defaultFlow,
         },
       };
 

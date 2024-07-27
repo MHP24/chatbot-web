@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Socket } from 'socket.io';
 import { GenerateIdAdapter } from '../../common/adapters';
 // * Services
@@ -9,6 +8,7 @@ import { PrismaService } from '../prisma/mysql/prisma.service';
 import { EventsService } from './events/events.service';
 // * Types
 import { Chat, EntryClientMessage } from './types';
+import { envs } from '../../common/config';
 
 @Injectable()
 export class ChatService {
@@ -17,12 +17,11 @@ export class ChatService {
   private generateId = new GenerateIdAdapter();
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly redisService: RedisService,
     private readonly prismaService: PrismaService,
     private readonly eventsService: EventsService,
     private readonly flowService: FlowService,
-  ) {}
+  ) { }
 
   // * Handle new or existing chat using HTTP
   async handleChatRequest(chatId: string) {
@@ -54,14 +53,14 @@ export class ChatService {
       await this.prismaService.chat.create({
         data: {
           chatId: conversationId,
-          chatInstance: this.configService.get('CHAT_INSTANCE'),
+          chatInstance: envs.chatInstance,
         },
       });
 
       this.eventsService.emitSessionEvent({
         client,
         chatId: conversationId,
-        flow: this.configService.get('DEFAULT_FLOW'),
+        flow: envs.defaultFlow,
       });
 
       await this.flowService.handleFlow(conversationId, null);
@@ -98,7 +97,7 @@ export class ChatService {
     this.chatTimeouts.set(chatId, {
       tout: setTimeout(
         () => this.closeChat(chatId, true),
-        this.configService.get('CHAT_TIMEOUT') * 1000,
+        envs.chatTimeout * 1000,
       ),
     });
   }
