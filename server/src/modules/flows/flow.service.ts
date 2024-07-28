@@ -1,32 +1,22 @@
 import { Injectable, Logger } from '@nestjs/common';
 // * Services
-import { BotService } from '../bot/bot.service';
 import { RedisService } from '../cache/redis.service';
 import { EventsService } from '../chat/events/events.service';
 // * Types
-import { FlowEntry, FlowResponse, BotContext } from '../bot/types';
 import { Chat } from '../chat/types/chat';
 import { EntryClientMessage } from '../chat/types/message';
 import { envs } from '../../common/config';
+import { FlowsFactory } from './factories';
 
 @Injectable()
 export class FlowService {
   private logger = new Logger('FlowService');
 
-  private flows: Record<
-    string,
-    (data: FlowEntry<void>) => Promise<FlowResponse | null>
-  >;
-
   constructor(
     private readonly redisService: RedisService,
-    private readonly botService: BotService,
     private readonly eventsService: EventsService,
-  ) {
-    this.flows = {
-      bot: this.handleBotFlow.bind(this),
-    };
-  }
+    private readonly flowsFactory: FlowsFactory,
+  ) {}
 
   async handleFlow(chatId: string, message: EntryClientMessage | null) {
     const chat =
@@ -34,13 +24,9 @@ export class FlowService {
       (await this.joinToFlow(chatId));
 
     const { currentFlow } = chat.context;
+    const flowInstance = this.flowsFactory.handleFlowCreation(currentFlow);
 
-    const flowExecution = this.flows[currentFlow];
-    if (!flowExecution) {
-      throw new Error(`Flow not supported: ${currentFlow}`);
-    }
-
-    const flowResponse = await flowExecution({
+    const flowResponse = await flowInstance.handleFlow({
       chatId,
       message,
       context: chat.context[currentFlow],
@@ -69,12 +55,6 @@ export class FlowService {
           },
         });
     }
-  }
-
-  private async handleBotFlow(
-    data: FlowEntry<BotContext>,
-  ): Promise<FlowResponse> {
-    return this.botService.handleFlow(data);
   }
 
   /*

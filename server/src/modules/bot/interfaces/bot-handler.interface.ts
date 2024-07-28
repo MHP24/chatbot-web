@@ -1,10 +1,5 @@
-import {
-  FlowEntry,
-  BotContext,
-  BotEntryResponse,
-  BotDataResponse,
-  FlowResponse,
-} from '../types';
+import { FlowEntry, FlowResponse } from '../../flows/types';
+import { BotContext, BotEntryResponse, BotDataResponse } from '../types';
 
 export interface BotEntryHandler {
   handler: (ctx: FlowEntry<BotContext>) => Promise<BotEntryResponse>;

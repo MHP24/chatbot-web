@@ -5,10 +5,11 @@ import { RedisModule } from '../cache/redis.module';
 import { EventsModule } from '../chat/events/events.module';
 // * Services
 import { FlowService } from './flow.service';
+import { FlowsFactory } from './factories';
 
 @Module({
   imports: [RedisModule, BotModule, EventsModule],
-  providers: [FlowService],
+  providers: [FlowsFactory, FlowService],
   exports: [FlowService],
 })
-export class FlowModule { }
+export class FlowModule {}

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { BotEntryHandler } from '../interfaces';
 import { InputService, OptionService } from './handlers';
-import { FlowEntry, BotContext, BotEntryResponse } from '../types';
+import { BotContext, BotEntryResponse } from '../types';
+import { FlowEntry } from '../../flows/types';
 
 @Injectable()
 export class EntriesService implements BotEntryHandler {

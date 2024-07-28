@@ -7,21 +7,16 @@ import { EntriesService } from './entries/entries.service';
 import { OutputsService } from './outputs/outputs.service';
 import { RedisService } from '../cache/redis.service';
 // * Types
+import { FlowEntry, FlowResponse } from '../flows/types/flows';
+import { FlowI } from '../flows/interfaces';
+import { BotContext, BotMenu, Input, Option } from './types';
 import { Chat } from '../chat/types/chat';
-import {
-  FlowEntry,
-  BotContext,
-  FlowResponse,
-  BotMenu,
-  Input,
-  Option,
-} from './types';
 import { EntryClientMessage } from '../chat/types/message';
 // * Helpers
 import { getMenuBySelection, buildContext } from './helpers';
 
 @Injectable()
-export class BotService {
+export class BotService implements FlowI<BotContext> {
   constructor(
     private readonly redisService: RedisService,
     private readonly entriesService: EntriesService,

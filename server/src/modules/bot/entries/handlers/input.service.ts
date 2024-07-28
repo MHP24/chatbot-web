@@ -5,13 +5,13 @@ import { mainMenu } from '../../menus/main';
 import { RedisService } from '../../../cache/redis.service';
 // * Types
 import {
-  FlowEntry,
   BotContext,
   BotEntryResponse,
   BotMenu,
   Input,
   Menu,
 } from '../../types';
+import { FlowEntry } from '../../../flows/types';
 // * Helpers
 import { deleteVariable } from '../../helpers';
 
