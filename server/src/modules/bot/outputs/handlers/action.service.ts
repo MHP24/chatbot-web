@@ -12,7 +12,7 @@ import {
 } from '../../types';
 // * Helpers
 import { getVariable } from '../../helpers';
-import { Chat } from 'src/modules/chat/types/chat';
+import { Chat } from '../../../chat/types/chat';
 
 @Injectable()
 export class ActionService {

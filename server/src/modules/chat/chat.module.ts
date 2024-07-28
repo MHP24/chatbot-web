@@ -15,4 +15,4 @@ import { PrismaModule } from '../prisma/prisma.module';
   controllers: [ChatsController],
   exports: [],
 })
-export class ChatModule { }
+export class ChatModule {}

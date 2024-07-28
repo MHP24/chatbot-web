@@ -3,7 +3,7 @@ import Fuse from 'fuse.js';
 // * Menus
 import { mainMenu } from '../../menus/main';
 // * Services
-import { RedisService } from 'src/modules/cache/redis.service';
+import { RedisService } from '../../../cache/redis.service';
 // * Types
 import {
   FlowEntry,

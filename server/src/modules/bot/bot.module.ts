@@ -9,4 +9,4 @@ import { RedisModule } from '../cache/redis.module';
   exports: [BotService],
   imports: [RedisModule, EntriesModule, OutputsModule],
 })
-export class BotModule { }
+export class BotModule {}

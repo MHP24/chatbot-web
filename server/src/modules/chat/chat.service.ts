@@ -21,7 +21,7 @@ export class ChatService {
     private readonly prismaService: PrismaService,
     private readonly eventsService: EventsService,
     private readonly flowService: FlowService,
-  ) { }
+  ) {}
 
   // * Handle new or existing chat using HTTP
   async handleChatRequest(chatId: string) {
