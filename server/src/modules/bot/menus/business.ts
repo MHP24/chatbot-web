@@ -1,8 +1,8 @@
-import { BotMenu, Menu } from '../types';
+import { BotMenu, BotMessageType, Menu } from '../types';
 
 export const business: Record<string, BotMenu<Menu>> = {
   portfolio: {
-    type: 'option',
+    type: BotMessageType.option,
     header: '¡Automatiza tu negocio!',
     body: [
       {
@@ -46,7 +46,7 @@ export const business: Record<string, BotMenu<Menu>> = {
   },
 
   services: {
-    type: 'option',
+    type: BotMessageType.option,
     header: 'Servicios dentro de mi área de expertís',
     body: [
       {

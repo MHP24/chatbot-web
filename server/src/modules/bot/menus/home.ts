@@ -1,8 +1,8 @@
-import { BotMenu, Menu } from '../types';
+import { BotMenu, BotMessageType, Menu } from '../types';
 
 export const home: Record<string, BotMenu<Menu>> = {
   start: {
-    type: 'option',
+    type: BotMessageType.option,
     header: '¡Hola! Soy el asistente virtual de Miguel  👾',
     body: [{ type: 'text', text: '¿En qué puedo ayudarte hoy?' }],
     data: {
@@ -32,7 +32,7 @@ export const home: Record<string, BotMenu<Menu>> = {
   },
 
   projects: {
-    type: 'option',
+    type: BotMessageType.option,
     header: 'Te invito a explorar algunos de mis proyectos',
     body: [
       {
@@ -94,7 +94,7 @@ export const home: Record<string, BotMenu<Menu>> = {
   },
 
   about: {
-    type: 'option',
+    type: BotMessageType.option,
     header: '¡Hola Soy Miguel! Desarrollador full stack',
     body: [
       {
@@ -129,7 +129,7 @@ export const home: Record<string, BotMenu<Menu>> = {
   },
 
   exit: {
-    type: 'close',
+    type: BotMessageType.close,
     header: '¡Gracias por tu tiempo!',
     body: [
       {

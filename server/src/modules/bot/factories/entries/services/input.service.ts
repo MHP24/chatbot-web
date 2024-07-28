@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 // * Menus
-import { mainMenu } from '../../menus/main';
+import { mainMenu } from '../../../menus/main';
 // * Services
-import { RedisService } from '../../../cache/redis.service';
+import { RedisService } from '../../../../cache/redis.service';
 // * Types
 import {
   BotContext,
@@ -10,18 +10,17 @@ import {
   BotMenu,
   Input,
   Menu,
-} from '../../types';
-import { FlowEntry } from '../../../flows/types';
+} from '../../../types';
+import { FlowEntry } from '../../../../flows/types';
+import { BotEntryHandler } from '../../../../bot/interfaces';
 // * Helpers
-import { deleteVariable } from '../../helpers';
+import { deleteVariable } from '../../../helpers';
 
 @Injectable()
-export class InputService {
+export class InputService implements BotEntryHandler {
   constructor(private readonly redisService: RedisService) {}
 
-  async handleInput(
-    contextData: FlowEntry<BotContext>,
-  ): Promise<BotEntryResponse> {
+  async handle(contextData: FlowEntry<BotContext>): Promise<BotEntryResponse> {
     const { message } = contextData.message;
     const { currentMenu } = contextData.context as {
       currentMenu: BotMenu<Input>;

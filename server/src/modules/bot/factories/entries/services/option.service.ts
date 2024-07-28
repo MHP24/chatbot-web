@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import Fuse from 'fuse.js';
 // * Menus
-import { mainMenu } from '../../menus/main';
+import { mainMenu } from '../../../menus/main';
 // * Services
-import { RedisService } from '../../../cache/redis.service';
+import { RedisService } from '../../../../cache/redis.service';
 // * Types
-import { BotContext, BotEntryResponse, BotMenu, Option } from '../../types';
-import { FlowEntry } from '../../../flows/types';
+import { BotContext, BotEntryResponse, BotMenu, Option } from '../../../types';
+import { FlowEntry } from '../../../../flows/types';
+import { BotEntryHandler } from '../../../../bot/interfaces';
 // * Helpers
-import { deleteVariable } from '../../helpers';
+import { deleteVariable } from '../../../helpers';
 
 @Injectable()
-export class OptionService {
+export class OptionService implements BotEntryHandler {
   variations: Record<
     string,
     (data: FlowEntry<BotContext>) => Promise<BotEntryResponse>
@@ -24,7 +25,7 @@ export class OptionService {
   }
 
   // * Main handler for options
-  async handleOption(data: FlowEntry<BotContext>): Promise<BotEntryResponse> {
+  async handle(data: FlowEntry<BotContext>): Promise<BotEntryResponse> {
     const { context } = data;
     const currentMenu = context.currentMenu as BotMenu<Option>;
 

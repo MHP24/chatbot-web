@@ -1,9 +1,10 @@
-export type BotMessageType =
-  | 'input'
-  | 'option'
-  | 'action'
-  | 'close'
-  | 'transfer';
+export enum BotMessageType {
+  input = 'input',
+  option = 'option',
+  action = 'action',
+  close = 'close',
+  transfer = 'transfer',
+}
 
 export type Image = {
   type: 'image';

@@ -1,2 +1,2 @@
-export * from './flows-factory';
-export * from './flow';
+export * from './flows-factory.interface';
+export * from './flow.interface';

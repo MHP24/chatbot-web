@@ -1,11 +1,11 @@
-import { BotMenu, Input, Option } from '../../types';
+import { BotMenu, BotMessageType, Input, Option } from '../../types';
 
 export const contactActionResponse = (
   email: string,
   subject: string,
 ): BotMenu<Input | Option> => {
   return {
-    type: 'option',
+    type: BotMessageType.option,
     header: `Perfecto, Miguel se comunicará contigo al correo ${email} con el asunto de: ${subject}`,
     body: [
       {

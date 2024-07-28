@@ -3,7 +3,6 @@ import { envs } from '../../common/config';
 // * Menus
 import { mainMenu } from './menus/main';
 // * Services
-import { EntriesService } from './entries/entries.service';
 import { OutputsService } from './outputs/outputs.service';
 import { RedisService } from '../cache/redis.service';
 // * Types
@@ -12,6 +11,8 @@ import { FlowI } from '../flows/interfaces';
 import { BotContext, BotMenu, Input, Option } from './types';
 import { Chat } from '../chat/types/chat';
 import { EntryClientMessage } from '../chat/types/message';
+// * Factories
+import { EntriesFactory } from './factories/entries/entries.factory';
 // * Helpers
 import { getMenuBySelection, buildContext } from './helpers';
 
@@ -19,7 +20,7 @@ import { getMenuBySelection, buildContext } from './helpers';
 export class BotService implements FlowI<BotContext> {
   constructor(
     private readonly redisService: RedisService,
-    private readonly entriesService: EntriesService,
+    private readonly entriesFactory: EntriesFactory,
     private readonly outputsService: OutputsService,
   ) {}
 
@@ -68,7 +69,14 @@ export class BotService implements FlowI<BotContext> {
     // * On next messages already having a context...
 
     // * Handling from context
-    const { menu, equivalentMessage } = await this.entriesService.handler(data);
+    const entriesHandlerInstance = this.entriesFactory.handleEntriesCreation(
+      data.context.currentMenu.type,
+    );
+
+    if (!entriesHandlerInstance) return;
+    const { menu, equivalentMessage } = await entriesHandlerInstance.handle(
+      data,
+    );
 
     // * Check if have to do something, (not in option, input)
     const { type, response, timestamp } = await this.outputsService.handler({

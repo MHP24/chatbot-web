@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ActionService } from './handlers';
 // * Types
-import { BotDataResponse, BotMenu, Input, Option } from '../types';
+import {
+  BotDataResponse,
+  BotMenu,
+  BotMessageType,
+  Input,
+  Option,
+} from '../types';
 import { BotOutputHandler } from '../interfaces';
 import {
   FlowResponse,
@@ -50,7 +56,7 @@ export class OutputsService implements BotOutputHandler {
   private handleClose(data: BotDataResponse): FlowCloseResponse {
     // * Simple bye message from close menu handled as option
     const closeMenu: BotMenu<Option> = {
-      type: 'option',
+      type: BotMessageType.option,
       header: data.menu.header,
       body: data.menu.body,
       data: {

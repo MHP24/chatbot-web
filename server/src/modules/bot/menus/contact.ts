@@ -1,8 +1,8 @@
-import { BotMenu, Menu } from '../types';
+import { BotMenu, BotMessageType, Menu } from '../types';
 
 export const contact: Record<string, BotMenu<Menu>> = {
   start: {
-    type: 'input',
+    type: BotMessageType.input,
     header: 'Por favor, a continuación ingresa tu email:',
     body: [],
     data: {
@@ -18,7 +18,7 @@ export const contact: Record<string, BotMenu<Menu>> = {
   },
 
   subject: {
-    type: 'input',
+    type: BotMessageType.input,
     header: '¿Que información te gustaría recibir?',
     body: [],
     data: {
@@ -34,7 +34,7 @@ export const contact: Record<string, BotMenu<Menu>> = {
   },
 
   send: {
-    type: 'action',
+    type: BotMessageType.action,
     header: '',
     body: [
       {
