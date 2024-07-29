@@ -13,7 +13,7 @@ export const TextMessage: FC<Props> = ({ side, text, timestamp }) => {
   return (
     <div className={cn('flex', isClient ? 'justify-end' : 'justify-start')}>
       <div
-        className={cn('flex items-end gap-2 rounded-xl text-md w-fit max-w-[90%] py-2 px-6 shadow-sm  border-[1px] border-c6',
+        className={cn('flex items-end gap-2 rounded-xl w-fit max-w-[90%] py-2 px-6 shadow-sm border-[1px] border-c6',
           isClient
             ? 'bg-c4 text-c1 ml-0 rounded-tr-none'
             : 'bg-c1 mr-0 rounded-tl-none'

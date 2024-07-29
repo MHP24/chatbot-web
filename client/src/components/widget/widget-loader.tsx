@@ -7,7 +7,7 @@ export const WidgetLoader = () => {
         >
           <p className='text-4xl text-c5 font-extrabold'>MHP</p>
         </div>
-        <p className='text-xl text-center animate-pulse'>Iniciando chat</p>
+        <p className='text-lg text-center animate-pulse'>Iniciando chat</p>
       </div>
     </div>
   )

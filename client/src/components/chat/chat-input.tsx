@@ -29,7 +29,7 @@ export const ChatInput = () => {
           autoComplete='off'
           placeholder='Escribe tu mensaje'
           className='w-full focus:outline-none bg-c1
-            p-3 text-md placeholder:opacity-60'
+            p-3 text-sm placeholder:opacity-60'
         />
         <button type='submit' className='w-12 p-2'>
           <img src={sendLogo} className='w-10 h-10 aspect-square' alt='send'/>
@@ -39,7 +39,7 @@ export const ChatInput = () => {
       <a href='https://mg-hp.com' target='_blank' rel='noreferrer'>
         <small className='block text-center m-auto w-full py-2'>
         Powered by
-          <strong className='text-c5'>&nbsp;Miguel HP</strong>
+          <strong className='text-c5 text-xs'>&nbsp;Miguel HP</strong>
         </small>
       </a>
     </form>

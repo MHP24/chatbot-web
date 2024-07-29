@@ -15,7 +15,7 @@ export const WidgetClosed = () => {
       </button>
       <div className='flex flex-col gap-10 items-center'>
         <p
-          className='text-lg m-auto text-center'
+          className='text-md m-auto text-center'
         >  {closeReason ?? 'El chat ha finalizado'} <br/><br/>
           <span>¡Muchas gracias por tu tiempo!</span>
         </p>

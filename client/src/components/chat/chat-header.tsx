@@ -12,7 +12,7 @@ export const ChatHeader = () => {
 
       <div className='flex items-center h-full w-full gap-5'>
         <div className='flex relative bg-c4 w-16 rounded-full aspect-square shadow-xl border-2 border-c6'>
-          <img src={agentIllustration} className='m-auto w-full h-full rounded-full' alt='agent-logo'/>
+          <img src={agentIllustration} className='m-auto w-12 h-12 rounded-full' alt='agent-logo'/>
 
           {/* Status indicator */}
           <div className='absolute w-3 h-3 bottom-0 right-0 mx-auto
@@ -23,10 +23,10 @@ export const ChatHeader = () => {
 
         <div>
           {/* Flow level */}
-          <h1 className='text-2xl font-semibold'>Asistente virtual</h1>
+          <h1 className='text-xl font-semibold'>Asistente virtual</h1>
 
           {/* Status label */}
-          <p className='text-md opacity-50'>En l&iacute;nea</p>
+          <p className='text-sm opacity-50'>En l&iacute;nea</p>
         </div>
       </div>
 

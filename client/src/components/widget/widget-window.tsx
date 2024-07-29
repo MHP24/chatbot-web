@@ -10,7 +10,7 @@ export const WidgetWindow = () => {
   return (
     <div
       className={cn(
-        'flex flex-col fixed top-0 left-0 bottom-0 right-0 sm:min-w-[25rem] sm:h-[90vh] sm:aspect-[8/16] sm:left-auto sm:top-auto sm:right-10 sm:bottom-5 shadow-2xl sm:rounded-xl z-20 bg-c1 text-c5 border-[1px] border-c6',
+        'flex flex-col fixed bottom-5 right-10 w-[23rem] h-[40rem] shadow-2xl rounded-xl z-20 bg-c1 text-c5 border-[1px] border-c6',
         timesOpened < 1 ? 'hidden' : '',
         isOpen ? 'fadeIn' : 'fadeOut'
       )}
