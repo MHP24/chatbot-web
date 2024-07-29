@@ -19,11 +19,5 @@ export class OutputsFactory implements OutputsCreator {
     };
 
     return outputsHandlers[botMessageType];
-
-    // return {
-    //   type: 'message',
-    //   response: data.menu as BotMenu<Input | Option>,
-    //   timestamp: +new Date(),
-    // };
   }
 }

@@ -11,6 +11,7 @@ import {
   CloseService,
   OutputsFactory,
 } from './factories/outputs';
+import { ActionsFactory, ContactAction } from './factories/actions';
 
 @Module({
   providers: [
@@ -21,6 +22,8 @@ import {
     OutputsFactory,
     ActionService,
     CloseService,
+    ActionsFactory,
+    ContactAction,
   ],
   exports: [BotService],
   imports: [RedisModule],
