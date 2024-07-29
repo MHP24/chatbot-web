@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from '../../../cache/redis.service';
-import { contactActionResponse } from '../action-builders';
+import { RedisService } from '../../../../cache/redis.service';
+import { contactActionResponse } from '../../actions/contact';
 // * Types
 import {
   BotDataResponse,
@@ -9,13 +9,15 @@ import {
   Input,
   Option,
   Action,
-} from '../../types';
+} from '../../../types';
+import { FlowEnumResponse, FlowResponse } from '../../../../flows/types';
+import { BotOutputHandler } from '../../../../bot/interfaces';
+import { Chat } from '../../../../chat/types/chat';
 // * Helpers
-import { getVariable } from '../../helpers';
-import { Chat } from '../../../chat/types/chat';
+import { getVariable } from '../../../helpers';
 
 @Injectable()
-export class ActionService {
+export class ActionService implements BotOutputHandler {
   actions: Record<
     string,
     (
@@ -31,7 +33,7 @@ export class ActionService {
     };
   }
 
-  async handleAction(data: BotDataResponse): Promise<BotMenu<Input | Option>> {
+  async handle(data: BotDataResponse): Promise<FlowResponse> {
     const { menu } = data as { menu: BotMenu<Action> };
     const { name } = menu.data.action;
 
@@ -44,7 +46,11 @@ export class ActionService {
       context: { bot },
     } = await this.redisService.get<Chat>(`chat:${data.chatId}`);
 
-    return await action(data, bot);
+    return {
+      type: FlowEnumResponse.message,
+      response: await action(data, bot),
+      timestamp: +new Date(),
+    };
   }
 
   // * Actions required for specific use cases...

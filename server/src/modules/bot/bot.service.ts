@@ -3,16 +3,20 @@ import { envs } from '../../common/config';
 // * Menus
 import { mainMenu } from './menus/main';
 // * Services
-import { OutputsService } from './outputs/outputs.service';
 import { RedisService } from '../cache/redis.service';
 // * Types
-import { FlowEntry, FlowResponse } from '../flows/types/flows';
+import {
+  FlowEntry,
+  FlowEnumResponse,
+  FlowResponse,
+} from '../flows/types/flows';
 import { FlowI } from '../flows/interfaces';
-import { BotContext, BotMenu, Input, Option } from './types';
+import { BotContext, BotMenu, BotMessageType, Input, Option } from './types';
 import { Chat } from '../chat/types/chat';
 import { EntryClientMessage } from '../chat/types/message';
 // * Factories
 import { EntriesFactory } from './factories/entries/entries.factory';
+import { OutputsFactory } from './factories/outputs';
 // * Helpers
 import { getMenuBySelection, buildContext } from './helpers';
 
@@ -21,7 +25,7 @@ export class BotService implements FlowI<BotContext> {
   constructor(
     private readonly redisService: RedisService,
     private readonly entriesFactory: EntriesFactory,
-    private readonly outputsService: OutputsService,
+    private readonly outputsFactory: OutputsFactory,
   ) {}
 
   async handleFlow(data: FlowEntry<BotContext>): Promise<FlowResponse> {
@@ -42,10 +46,19 @@ export class BotService implements FlowI<BotContext> {
       ) as BotMenu<Input | Option>;
 
       // * Eval if the selection must to be handled by handleOutputs
-      const { type, response, timestamp } = await this.outputsService.handler({
-        chatId,
-        menu: selection,
-      });
+      const outputHandler = this.outputsFactory.handleOutputsCreation(
+        envs.defaultFlowKeyType as BotMessageType,
+      );
+      const { type, response, timestamp } = outputHandler
+        ? await outputHandler.handle({
+            chatId,
+            menu: selection,
+          })
+        : {
+            type: FlowEnumResponse.message,
+            response: selection,
+            timestamp: +new Date(),
+          };
 
       await this.redisService.update(
         `chat:${chatId}`,
@@ -79,10 +92,17 @@ export class BotService implements FlowI<BotContext> {
     );
 
     // * Check if have to do something, (not in option, input)
-    const { type, response, timestamp } = await this.outputsService.handler({
-      chatId,
-      menu,
-    });
+    const outputHandler = this.outputsFactory.handleOutputsCreation(menu.type);
+    const { type, response, timestamp } = outputHandler
+      ? await outputHandler.handle({
+          chatId,
+          menu,
+        })
+      : {
+          type: FlowEnumResponse.message,
+          response: menu,
+          timestamp: +new Date(),
+        };
 
     const nextMenu = response as BotMenu<Input | Option>;
 

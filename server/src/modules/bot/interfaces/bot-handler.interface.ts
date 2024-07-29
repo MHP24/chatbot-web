@@ -6,5 +6,5 @@ export interface BotEntryHandler {
 }
 
 export interface BotOutputHandler {
-  handler: (data: BotDataResponse) => Promise<FlowResponse>;
+  handle: (data: BotDataResponse) => Promise<FlowResponse> | FlowResponse;
 }

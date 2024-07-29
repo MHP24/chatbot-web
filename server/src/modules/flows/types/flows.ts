@@ -7,23 +7,28 @@ export enum Flow {
   survey = 'survey',
 }
 
+export enum FlowEnumResponse {
+  close = 'close',
+  message = 'message',
+}
+
 export type FlowEntry<T> = {
   chatId: string;
   message: EntryClientMessage | null;
   context?: T;
 };
 
-export type FlowCloseResponse = {
-  type: 'close';
+export type FlowResponse = {
+  type: FlowEnumResponse;
   response: BotMenu<Input | Option>;
   timestamp: number;
 };
 
-export type FlowMessageResponse = {
-  type: 'message';
-  response: BotMenu<Input | Option>;
-  timestamp: number;
-};
+// export type FlowMessageResponse = {
+//   type: 'message';
+//   response: BotMenu<Input | Option>;
+//   timestamp: number;
+// };
 
 // export type FlowTransferResponse = {
 //   type: 'transfer';
@@ -31,5 +36,5 @@ export type FlowMessageResponse = {
 //   destination: string;
 // };
 
-export type FlowResponse = FlowCloseResponse | FlowMessageResponse;
+// export type FlowResponse = FlowCloseResponse | FlowMessageResponse;
 // | FlowTransferResponse
