@@ -38,8 +38,6 @@ lerna-debug.log*
 /src/modules/prisma/mysql/migrations/*
 
 # Build from client provided as static files
-static/public/scripts/chat/*
-!static/public/scripts/chat/main.js
 
 # Etc
 .env
