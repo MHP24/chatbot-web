@@ -17,7 +17,7 @@ export const ChatDialog = () => {
   }
 
   return (
-    <section className="h-full bg-c2 overflow-y-auto py-6 fadeIn__light" ref={messagesRef}>
+    <section className='h-full bg-c2 overflow-y-auto py-6 fadeIn__light' ref={messagesRef}>
       <MessagesContainer messages={messages} />
     </section>
   )
