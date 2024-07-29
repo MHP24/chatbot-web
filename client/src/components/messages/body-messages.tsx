@@ -12,7 +12,7 @@ export const BodyMessages: FC<Props> = ({ message, i }) => {
   if (!(body && body.length > 0)) return null
 
   return (
-    <div className="my-2 flex flex-col gap-2">
+    <div className='my-2 flex flex-col gap-2'>
       {body.map((bodyMessage, j) => {
         if (
           message.type === 'option' &&

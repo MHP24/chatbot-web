@@ -35,7 +35,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # DB Migrations
-src/providers/prisma/mysql/migrations/*
+/src/modules/prisma/mysql/migrations/*
 
 # Build from client provided as static files
 static/public/scripts/chat/*

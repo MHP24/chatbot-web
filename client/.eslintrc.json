@@ -26,6 +26,7 @@
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/no-misused-promises": "off",
-         "quotes": ["error", "single"] 
+        "quotes": ["error", "single"],
+        "jsx-quotes": ["error", "prefer-single"] 
     }
 }

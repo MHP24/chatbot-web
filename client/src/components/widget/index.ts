@@ -1,7 +1,4 @@
 export * from './widget-button'
-export * from './chat-dialog'
-export * from './chat-header'
-export * from './chat-input'
 export * from './widget'
 export * from './widget-window'
 export * from './widget-loader'

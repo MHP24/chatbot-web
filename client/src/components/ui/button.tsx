@@ -25,7 +25,7 @@ export const Button: FC<PropsWithChildren<Props>> = ({ children, fn, cooldown })
     <button
       onClick={handleClick}
       disabled={isLoading}
-      className='bg-c4 py-2 px-6 rounded-full text-c5 font-semibold text-md
+      className='bg-c4 py-2 px-6 rounded-full text-c5 font-semibold
         hover:bg-c2 w-sm disabled:bg-c2 border-[1px] border-c6'
     >
       { isLoading ? <p className='animate-bounce'>...</p> : children }

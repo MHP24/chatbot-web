@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { GenerateIdAdapterT } from './types';
+import { GenerateIdAdapterI } from './interfaces';
 import { v4 as uuid } from 'uuid';
 
-@Injectable()
-export class GenerateIdAdapter implements GenerateIdAdapterT {
+export class GenerateIdAdapter implements GenerateIdAdapterI {
   generate() {
     return uuid();
   }
