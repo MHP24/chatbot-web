@@ -16,7 +16,7 @@ export default ({ mode }) => {
           },
         },
       },
-      outDir: '../server/static/public/scripts/chat',
+      outDir: '../server/static/chat',
       assetsDir: '.', 
     },
   })

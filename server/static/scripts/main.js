@@ -24,7 +24,7 @@
         attrs: [
           {
             name: 'src',
-            val: `${chatHostUrl}/files/scripts/chat/chat-bundle.js`,
+            val: `${chatHostUrl}/files/chat/chat-bundle.js`,
           },
         ],
       }),
@@ -45,7 +45,7 @@
           { name: 'type', val: 'text/css' },
           {
             name: 'href',
-            val: `${chatHostUrl}/files/scripts/chat/chat-styles.css`,
+            val: `${chatHostUrl}/files/chat/chat-styles.css`,
           },
         ],
       }),
